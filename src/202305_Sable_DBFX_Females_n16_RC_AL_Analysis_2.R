@@ -344,9 +344,9 @@ print(Food_Intake_lsmeans_4hrs)
 Food_Intake_lsmeans_4hrs$emmean <- Food_Intake_lsmeans_4hrs$emmean
 Food_Intake_lsmeans_4hrs$SE <- Food_Intake_lsmeans_4hrs$SE
 Food_Intake_lsmeans_4hrs <- Food_Intake_lsmeans_4hrs[with(Food_Intake_lsmeans_4hrs, order(four_hours, Genotype)), ]
-write.table(Food_Intake_contrasts_4hrs, file = "202305_DBFX_Females_Sable_RC_LD_Food_Intake_contrasts_4hrs.csv")
+write.table(Food_Intake_contrasts_4hrs, file = "./output/202305_DBFX_Females_Sable_RC_LD_Food_Intake_contrasts_4hrs.csv")
 
-pdf(file = "./202305_DBFX_Females_RC_4hrs_Feeding_Amount.pdf", height = 4, width = 6)
+pdf(file = "./output/202305_DBFX_Females_RC_4hrs_Feeding_Amount.pdf", height = 4, width = 6)
 
 foodintake_4hrs_mean_mat <- t(matrix(c(subset(Food_Intake_lsmeans_4hrs, Genotype == "Ctrl" & four_hours == "ZT0_ZT4")$emmean, subset(Food_Intake_lsmeans_4hrs, Genotype == "Ctrl" & four_hours == "ZT4_ZT8")$emmean, subset(Food_Intake_lsmeans_4hrs, Genotype == "Ctrl" & four_hours == "ZT8_ZT12")$emmean, subset(Food_Intake_lsmeans_4hrs, Genotype == "Ctrl" & four_hours == "ZT12_ZT16")$emmean, subset(Food_Intake_lsmeans_4hrs, Genotype == "Ctrl" & four_hours == "ZT16_ZT20")$emmean, subset(Food_Intake_lsmeans_4hrs, Genotype == "Ctrl" & four_hours == "ZT20_ZT24")$emmean,subset(Food_Intake_lsmeans_4hrs, Genotype == "BKO" & four_hours == "ZT0_ZT4")$emmean, subset(Food_Intake_lsmeans_4hrs, Genotype == "BKO" & four_hours == "ZT4_ZT8")$emmean, subset(Food_Intake_lsmeans_4hrs, Genotype == "BKO" & four_hours == "ZT8_ZT12")$emmean, subset(Food_Intake_lsmeans_4hrs, Genotype == "BKO" & four_hours == "ZT12_ZT16")$emmean, subset(Food_Intake_lsmeans_4hrs, Genotype == "BKO" & four_hours == "ZT16_ZT20")$emmean, subset(Food_Intake_lsmeans_4hrs, Genotype == "BKO" & four_hours == "ZT20_ZT24")$emmean), 6, 2)) # create a 4-by-2 matrix, then transpose it
 colnames(foodintake_4hrs_mean_mat) <- c("0-4", "4-8", "8-12", "12-16", "16-20", "20-24")
@@ -395,12 +395,12 @@ print(Food_Intake_lsmeans_LD)
 Food_Intake_lsmeans_LD$emmean <- Food_Intake_lsmeans_LD$emmean
 Food_Intake_lsmeans_LD$SE <- Food_Intake_lsmeans_LD$SE
 Food_Intake_lsmeans_LD <- Food_Intake_lsmeans_LD[with(Food_Intake_lsmeans_LD, order(day_night, Genotype)), ]
-write.table(Food_Intake_contrasts_LD, file = "202305_DBFX_Females_Sable_RC_LD_Food_Intake_contrasts_LD.csv")
+write.table(Food_Intake_contrasts_LD, file = "./output/202305_DBFX_Females_Sable_RC_LD_Food_Intake_contrasts_LD.csv")
 ###  FDR-adjusted comparisons
 
 print(Food_Intake_lsmeans_LD)
 
-pdf(file = "./202305_DBFX_Females_Sable_RC_LD_Feeding_Amount.pdf", height = 4, width = 6)
+pdf(file = "./output/202305_DBFX_Females_Sable_RC_LD_Feeding_Amount.pdf", height = 4, width = 6)
 
 foodintake_LD_mean_mat <- t(matrix(c(subset(Food_Intake_lsmeans_LD, Genotype == "Ctrl" & day_night == "Dark")$emmean, subset(Food_Intake_lsmeans_LD, Genotype == "Ctrl" & day_night == "Light")$emmean, subset(Food_Intake_lsmeans_LD, Genotype == "BKO" & day_night == "Dark")$emmean, subset(Food_Intake_lsmeans_LD, Genotype == "BKO" & day_night == "Light")$emmean), 2, 2)) # create a 2-by-2 matrix, then transpose it
 colnames(foodintake_LD_mean_mat) <- c("Dark", "Light")
@@ -454,10 +454,10 @@ print(Food_Intake_lsmeans_Daily)
 Food_Intake_lsmeans_Daily$emmean <- Food_Intake_lsmeans_Daily$emmean
 Food_Intake_lsmeans_Daily$SE <- Food_Intake_lsmeans_Daily$SE
 Food_Intake_lsmeans_Daily <- Food_Intake_lsmeans_Daily[with(Food_Intake_lsmeans_Daily, order(Genotype)), ]
-write.table(Food_Intake_contrasts_Daily, file = "202305_DBFX_Females_Sable_RC_Daily_Food_Intake_contrasts_Daily.csv")
+write.table(Food_Intake_contrasts_Daily, file = "./output/202305_DBFX_Females_Sable_RC_Daily_Food_Intake_contrasts_Daily.csv")
 ###  FDR-adjusted comparisons
 
-pdf(file = "./202305_DBFX_Females_Sable_RC_Daily_Feeding_Amount.pdf", height = 4, width = 6)
+pdf(file = "./output/202305_DBFX_Females_Sable_RC_Daily_Feeding_Amount.pdf", height = 4, width = 6)
 
 foodintake_Daily_mean_mat <- t(matrix(c(subset(Food_Intake_lsmeans_Daily, Genotype == "Ctrl")$emmean, subset(Food_Intake_lsmeans_Daily, Genotype == "BKO")$emmean), 1, 2)) # create a 2-by-2 matrix, then transpose it
 rownames(foodintake_Daily_mean_mat) <- c("Control","BKO")
@@ -514,7 +514,7 @@ print(Activity_lsmeans_4hrs)
 Activity_lsmeans_4hrs$emmean <- Activity_lsmeans_4hrs$emmean
 Activity_lsmeans_4hrs$SE <- Activity_lsmeans_4hrs$SE
 Activity_lsmeans_4hrs <- Activity_lsmeans_4hrs[with(Activity_lsmeans_4hrs, order(four_hours, Genotype)), ]
-write.table(Activity_contrasts_4hrs, file = "202305_DBFX_Females_Sable_RC_LD_Activity_contrasts_4hrs.csv")
+write.table(Activity_contrasts_4hrs, file = "./output/202305_DBFX_Females_Sable_RC_LD_Activity_contrasts_4hrs.csv")
 
 Activity_lsmeans_4hrs <- Activity_lsmeans_4hrs[order(factor(Activity_lsmeans_4hrs$four_hours, levels = c('ZT0_ZT4', 'ZT4_ZT8', 'ZT8_ZT12', 'ZT12_ZT16', 'ZT16_ZT20', 'ZT20_ZT24'))),]
 
@@ -522,7 +522,7 @@ Activity_lsmeans_4hrs$zt <- c(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6)
 
 print(Activity_lsmeans_4hrs)
 
-pdf(file = "./202305_DBFX_Females_Sable_8WKRC_Activity_4hrs_Line_Plot.pdf", height = 5, width = 7)
+pdf(file = "./output/202305_DBFX_Females_Sable_8WKRC_Activity_4hrs_Line_Plot.pdf", height = 5, width = 7)
 
 opar <- theme_update(panel.grid.major = element_blank(),
                      panel.grid.minor = element_blank(),
@@ -553,9 +553,9 @@ print(Activity_lsmeans_LD)
 Activity_lsmeans_LD$emmean <- Activity_lsmeans_LD$emmean
 Activity_lsmeans_LD$SE <- Activity_lsmeans_LD$SE
 Activity_lsmeans_LD <- Activity_lsmeans_LD[with(Activity_lsmeans_LD, order(day_night, Genotype)), ]
-write.table(Activity_contrasts_LD, file = "202305_DBFX_Females_Sable_RC_LD_Activity_contrasts_LD.csv")
+write.table(Activity_contrasts_LD, file = "./output/202305_DBFX_Females_Sable_RC_LD_Activity_contrasts_LD.csv")
 
-pdf(file = "./202305_DBFX_Females_Sable_RC_LD_Activity.pdf", height = 4, width = 6)
+pdf(file = "./output/202305_DBFX_Females_Sable_RC_LD_Activity.pdf", height = 4, width = 6)
 
 Activity_LD_mean_mat <- t(matrix(c(subset(Activity_lsmeans_LD, Genotype == "Ctrl" & day_night == "Dark")$emmean, subset(Activity_lsmeans_LD, Genotype == "Ctrl" & day_night == "Light")$emmean, subset(Activity_lsmeans_LD, Genotype == "BKO" & day_night == "Dark")$emmean, subset(Activity_lsmeans_LD, Genotype == "BKO" & day_night == "Light")$emmean), 2, 2)) # create a 2-by-2 matrix, then transpose it
 colnames(Activity_LD_mean_mat) <- c("Dark", "Light")
@@ -604,9 +604,9 @@ print(Activity_lsmeans_Daily)
 Activity_lsmeans_Daily$emmean <- Activity_lsmeans_Daily$emmean
 Activity_lsmeans_Daily$SE <- Activity_lsmeans_Daily$SE
 Activity_lsmeans_Daily <- Activity_lsmeans_Daily[with(Activity_lsmeans_Daily, order(Genotype)), ]
-write.table(Activity_contrasts_Daily, file = "202305_DBFX_Females_Sable_RC_Daily_Activity_contrasts_Daily.csv")
+write.table(Activity_contrasts_Daily, file = "./output/202305_DBFX_Females_Sable_RC_Daily_Activity_contrasts_Daily.csv")
 
-pdf(file = "./202305_DBFX_Females_Sable_RC_Activity_Amount.pdf", height = 4, width = 6)
+pdf(file = "./output/202305_DBFX_Females_Sable_RC_Activity_Amount.pdf", height = 4, width = 6)
 
 Activity_Daily_mean_mat <- t(matrix(c(subset(Activity_lsmeans_Daily, Genotype == "Ctrl")$emmean, subset(Activity_lsmeans_Daily, Genotype == "BKO")$emmean), 1, 2)) # create a 2-by-2 matrix, then transpose it
 rownames(Activity_Daily_mean_mat) <- c("Control","BKO")
@@ -659,7 +659,7 @@ print(Sleep_Percent_lsmeans_4hrs)
 Sleep_Percent_lsmeans_4hrs$emmean <- Sleep_Percent_lsmeans_4hrs$emmean
 Sleep_Percent_lsmeans_4hrs$SE <- Sleep_Percent_lsmeans_4hrs$SE
 Sleep_Percent_lsmeans_4hrs <- Sleep_Percent_lsmeans_4hrs[with(Sleep_Percent_lsmeans_4hrs, order(four_hours, Genotype)), ]
-write.table(Sleep_Percent_contrasts_4hrs, file = "202305_DBFX_Females_Sable_RC_LD_Sleep_Percent_contrasts_4hrs.csv")
+write.table(Sleep_Percent_contrasts_4hrs, file = "./output/202305_DBFX_Females_Sable_RC_LD_Sleep_Percent_contrasts_4hrs.csv")
 
 Sleep_Percent_lsmeans_4hrs <- Sleep_Percent_lsmeans_4hrs[order(factor(Sleep_Percent_lsmeans_4hrs$four_hours, levels = c('ZT0_ZT4', 'ZT4_ZT8', 'ZT8_ZT12', 'ZT12_ZT16', 'ZT16_ZT20', 'ZT20_ZT24'))),]
 
@@ -667,7 +667,7 @@ Sleep_Percent_lsmeans_4hrs$zt <- c(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6)
 
 print(Sleep_Percent_lsmeans_4hrs)
 
-pdf(file = "./202305_DBFX_Females_Sable_8WKRC_Sleep_Percent_4hrs_Line_Plot.pdf", height = 5, width = 7)
+pdf(file = "./output/202305_DBFX_Females_Sable_8WKRC_Sleep_Percent_4hrs_Line_Plot.pdf", height = 5, width = 7)
 
 opar <- theme_update(panel.grid.major = element_blank(),
                      panel.grid.minor = element_blank(),
@@ -698,9 +698,9 @@ print(Sleep_Percent_lsmeans_LD)
 Sleep_Percent_lsmeans_LD$emmean <- Sleep_Percent_lsmeans_LD$emmean
 Sleep_Percent_lsmeans_LD$SE <- Sleep_Percent_lsmeans_LD$SE
 Sleep_Percent_lsmeans_LD <- Sleep_Percent_lsmeans_LD[with(Sleep_Percent_lsmeans_LD, order(day_night, Genotype)), ]
-write.table(Sleep_Percent_contrasts_LD, file = "202305_DBFX_Females_Sable_RC_LD_Sleep_Percent_contrasts_LD.csv")
+write.table(Sleep_Percent_contrasts_LD, file = "./output/202305_DBFX_Females_Sable_RC_LD_Sleep_Percent_contrasts_LD.csv")
 
-pdf(file = "./202305_DBFX_Females_Sable_RC_LD_Sleep_Percent.pdf", height = 4, width = 6)
+pdf(file = "./output/202305_DBFX_Females_Sable_RC_LD_Sleep_Percent.pdf", height = 4, width = 6)
 
 Sleep_Percent_LD_mean_mat <- t(matrix(c(subset(Sleep_Percent_lsmeans_LD, Genotype == "Ctrl" & day_night == "Dark")$emmean, subset(Sleep_Percent_lsmeans_LD, Genotype == "Ctrl" & day_night == "Light")$emmean, subset(Sleep_Percent_lsmeans_LD, Genotype == "BKO" & day_night == "Dark")$emmean, subset(Sleep_Percent_lsmeans_LD, Genotype == "BKO" & day_night == "Light")$emmean), 2, 2)) # create a 2-by-2 matrix, then transpose it
 colnames(Sleep_Percent_LD_mean_mat) <- c("Dark", "Light")
@@ -749,9 +749,9 @@ print(Sleep_Percent_lsmeans_Daily)
 Sleep_Percent_lsmeans_Daily$emmean <- Sleep_Percent_lsmeans_Daily$emmean
 Sleep_Percent_lsmeans_Daily$SE <- Sleep_Percent_lsmeans_Daily$SE
 Sleep_Percent_lsmeans_Daily <- Sleep_Percent_lsmeans_Daily[with(Sleep_Percent_lsmeans_Daily, order(Genotype)), ]
-write.table(Sleep_Percent_contrasts_Daily, file = "202305_DBFX_Females_Sable_RC_Daily_Sleep_Percent_contrasts_Daily.csv")
+write.table(Sleep_Percent_contrasts_Daily, file = "./output/202305_DBFX_Females_Sable_RC_Daily_Sleep_Percent_contrasts_Daily.csv")
 
-pdf(file = "./202305_DBFX_Females_Sable_RC_Sleep_Percent_Amount.pdf", height = 4, width = 6)
+pdf(file = "./output/202305_DBFX_Females_Sable_RC_Sleep_Percent_Amount.pdf", height = 4, width = 6)
 
 Sleep_Percent_Daily_mean_mat <- t(matrix(c(subset(Sleep_Percent_lsmeans_Daily, Genotype == "Ctrl")$emmean, subset(Sleep_Percent_lsmeans_Daily, Genotype == "BKO")$emmean), 1, 2)) # create a 2-by-2 matrix, then transpose it
 rownames(Sleep_Percent_Daily_mean_mat) <- c("Control","BKO")
@@ -798,7 +798,7 @@ print(VO2_lsmeans_4hrs)
 VO2_lsmeans_4hrs$emmean <- VO2_lsmeans_4hrs$emmean
 VO2_lsmeans_4hrs$SE <- VO2_lsmeans_4hrs$SE
 VO2_lsmeans_4hrs <- VO2_lsmeans_4hrs[with(VO2_lsmeans_4hrs, order(four_hours, Genotype)), ]
-write.table(VO2_contrasts_4hrs, file = "202305_DBFX_Females_Sable_RC_LD_VO2_contrasts_4hrs.csv")
+write.table(VO2_contrasts_4hrs, file = "./output/202305_DBFX_Females_Sable_RC_LD_VO2_contrasts_4hrs.csv")
 
 VO2_lsmeans_4hrs <- VO2_lsmeans_4hrs[order(factor(VO2_lsmeans_4hrs$four_hours, levels = c('ZT0_ZT4', 'ZT4_ZT8', 'ZT8_ZT12', 'ZT12_ZT16', 'ZT16_ZT20', 'ZT20_ZT24'))),]
 
@@ -806,7 +806,7 @@ VO2_lsmeans_4hrs$zt <- c(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6)
 
 print(VO2_lsmeans_4hrs)
 
-pdf(file = "./202305_DBFX_Females_Sable_8WKRC_VO2_4hrs_Line_Plot.pdf", height = 5, width = 7)
+pdf(file = "./output/202305_DBFX_Females_Sable_8WKRC_VO2_4hrs_Line_Plot.pdf", height = 5, width = 7)
 
 opar <- theme_update(panel.grid.major = element_blank(),
                      panel.grid.minor = element_blank(),
@@ -837,9 +837,9 @@ print(VO2_lsmeans_LD)
 VO2_lsmeans_LD$emmean <- VO2_lsmeans_LD$emmean
 VO2_lsmeans_LD$SE <- VO2_lsmeans_LD$SE
 VO2_lsmeans_LD <- VO2_lsmeans_LD[with(VO2_lsmeans_LD, order(day_night, Genotype)), ]
-write.table(VO2_contrasts_LD, file = "202305_DBFX_Females_Sable_RC_LD_VO2_contrasts_LD.csv")
+write.table(VO2_contrasts_LD, file = "./output/202305_DBFX_Females_Sable_RC_LD_VO2_contrasts_LD.csv")
 
-pdf(file = "./202305_DBFX_Females_Sable_RC_LD_VO2.pdf", height = 4, width = 6)
+pdf(file = "./output/202305_DBFX_Females_Sable_RC_LD_VO2.pdf", height = 4, width = 6)
 
 VO2_LD_mean_mat <- t(matrix(c(subset(VO2_lsmeans_LD, Genotype == "Ctrl" & day_night == "Dark")$emmean, subset(VO2_lsmeans_LD, Genotype == "Ctrl" & day_night == "Light")$emmean, subset(VO2_lsmeans_LD, Genotype == "BKO" & day_night == "Dark")$emmean, subset(VO2_lsmeans_LD, Genotype == "BKO" & day_night == "Light")$emmean), 2, 2)) # create a 2-by-2 matrix, then transpose it
 colnames(VO2_LD_mean_mat) <- c("Dark", "Light")
@@ -888,9 +888,9 @@ print(VO2_lsmeans_Daily)
 VO2_lsmeans_Daily$emmean <- VO2_lsmeans_Daily$emmean
 VO2_lsmeans_Daily$SE <- VO2_lsmeans_Daily$SE
 VO2_lsmeans_Daily <- VO2_lsmeans_Daily[with(VO2_lsmeans_Daily, order(Genotype)), ]
-write.table(VO2_contrasts_Daily, file = "202305_DBFX_Females_Sable_RC_Daily_VO2_contrasts_Daily.csv")
+write.table(VO2_contrasts_Daily, file = "./output/202305_DBFX_Females_Sable_RC_Daily_VO2_contrasts_Daily.csv")
 
-pdf(file = "./202305_DBFX_Females_Sable_RC_VO2_Amount.pdf", height = 4, width = 6)
+pdf(file = "./output/202305_DBFX_Females_Sable_RC_VO2_Amount.pdf", height = 4, width = 6)
 
 VO2_Daily_mean_mat <- t(matrix(c(subset(VO2_lsmeans_Daily, Genotype == "Ctrl")$emmean, subset(VO2_lsmeans_Daily, Genotype == "BKO")$emmean), 1, 2)) # create a 2-by-2 matrix, then transpose it
 rownames(VO2_Daily_mean_mat) <- c("Control","BKO")
@@ -921,7 +921,7 @@ dev.off()
 
 ## Body Weight Analysis
 
-pdf(file = "./202305_DBFX_Females_Chronic_Body_Weights.pdf", height = 4, width = 6)
+pdf(file = "./output/202305_DBFX_Females_Chronic_Body_Weights.pdf", height = 4, width = 6)
 
 # var.test(InitMass_g ~ Genotype, data = data2) # commenting out since no InitMass_g variable in data2
 # weight_ttest <- t.test(InitMass_g ~ Genotype, data = data2, var.equal = T)
@@ -973,7 +973,7 @@ print(RER_lsmeans_4hrs)
 RER_lsmeans_4hrs$emmean <- RER_lsmeans_4hrs$emmean
 RER_lsmeans_4hrs$SE <- RER_lsmeans_4hrs$SE
 RER_lsmeans_4hrs <- RER_lsmeans_4hrs[with(RER_lsmeans_4hrs, order(four_hours, Genotype)), ]
-write.table(RER_contrasts_4hrs, file = "202305_DBFX_Females_Sable_RC_LD_RER_contrasts_4hrs.csv")
+write.table(RER_contrasts_4hrs, file = "./output/202305_DBFX_Females_Sable_RC_LD_RER_contrasts_4hrs.csv")
 
 RER_lsmeans_4hrs <- RER_lsmeans_4hrs[order(factor(RER_lsmeans_4hrs$four_hours, levels = c('ZT0_ZT4', 'ZT4_ZT8', 'ZT8_ZT12', 'ZT12_ZT16', 'ZT16_ZT20', 'ZT20_ZT24'))),]
 
@@ -981,7 +981,7 @@ RER_lsmeans_4hrs$zt <- c(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6)
 
 print(RER_lsmeans_4hrs)
 
-pdf(file = "./202305_DBFX_Females_Sable_8WKRC_RER_4hrs_Line_Plot.pdf", height = 5, width = 7)
+pdf(file = "./output/202305_DBFX_Females_Sable_8WKRC_RER_4hrs_Line_Plot.pdf", height = 5, width = 7)
 
 opar <- theme_update(panel.grid.major = element_blank(),
                      panel.grid.minor = element_blank(),
@@ -1010,9 +1010,9 @@ print(RER_lsmeans_LD)
 RER_lsmeans_LD$emmean <- RER_lsmeans_LD$emmean
 RER_lsmeans_LD$SE <- RER_lsmeans_LD$SE
 RER_lsmeans_LD <- RER_lsmeans_LD[with(RER_lsmeans_LD, order(day_night, Genotype)), ]
-write.table(RER_contrasts_LD, file = "202305_DBFX_Females_Sable_RC_LD_RER_contrasts_LD.csv")
+write.table(RER_contrasts_LD, file = "./output/202305_DBFX_Females_Sable_RC_LD_RER_contrasts_LD.csv")
 
-pdf(file = "./202305_DBFX_Females_Sable_RC_LD_RER.pdf", height = 4, width = 6)
+pdf(file = "./output/202305_DBFX_Females_Sable_RC_LD_RER.pdf", height = 4, width = 6)
 
 RER_LD_mean_mat <- t(matrix(c(subset(RER_lsmeans_LD, Genotype == "Ctrl" & day_night == "Dark")$emmean, subset(RER_lsmeans_LD, Genotype == "Ctrl" & day_night == "Light")$emmean, subset(RER_lsmeans_LD, Genotype == "BKO" & day_night == "Dark")$emmean, subset(RER_lsmeans_LD, Genotype == "BKO" & day_night == "Light")$emmean), 2, 2)) # create a 2-by-2 matrix, then transpose it
 colnames(RER_LD_mean_mat) <- c("Dark", "Light")
@@ -1061,9 +1061,9 @@ print(RER_lsmeans_Daily)
 RER_lsmeans_Daily$emmean <- RER_lsmeans_Daily$emmean
 RER_lsmeans_Daily$SE <- RER_lsmeans_Daily$SE
 RER_lsmeans_Daily <- RER_lsmeans_Daily[with(RER_lsmeans_Daily, order(Genotype)), ]
-write.table(RER_contrasts_Daily, file = "202305_DBFX_Females_Sable_RC_Daily_RER_contrasts_Daily.csv")
+write.table(RER_contrasts_Daily, file = "./output/202305_DBFX_Females_Sable_RC_Daily_RER_contrasts_Daily.csv")
 
-pdf(file = "./202305_DBFX_Females_Sable_RC_RER_Amount.pdf", height = 4, width = 6)
+pdf(file = "./output/202305_DBFX_Females_Sable_RC_RER_Amount.pdf", height = 4, width = 6)
 
 RER_Daily_mean_mat <- t(matrix(c(subset(RER_lsmeans_Daily, Genotype == "Ctrl")$emmean, subset(RER_lsmeans_Daily, Genotype == "BKO")$emmean), 1, 2)) # create a 2-by-2 matrix, then transpose it
 rownames(RER_Daily_mean_mat) <- c("Control","BKO")
@@ -1110,7 +1110,7 @@ print(EE_lsmeans_4hrs)
 EE_lsmeans_4hrs$emmean <- EE_lsmeans_4hrs$emmean
 EE_lsmeans_4hrs$SE <- EE_lsmeans_4hrs$SE
 EE_lsmeans_4hrs <- EE_lsmeans_4hrs[with(EE_lsmeans_4hrs, order(four_hours, Genotype)), ]
-write.table(EE_contrasts_4hrs, file = "202305_DBFX_Females_Sable_RC_LD_EE_contrasts_4hrs.csv")
+write.table(EE_contrasts_4hrs, file = "./output/202305_DBFX_Females_Sable_RC_LD_EE_contrasts_4hrs.csv")
 
 EE_lsmeans_4hrs <- EE_lsmeans_4hrs[order(factor(EE_lsmeans_4hrs$four_hours, levels = c('ZT0_ZT4', 'ZT4_ZT8', 'ZT8_ZT12', 'ZT12_ZT16', 'ZT16_ZT20', 'ZT20_ZT24'))),]
 
@@ -1118,7 +1118,7 @@ EE_lsmeans_4hrs$zt <- c(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6)
 
 print(EE_lsmeans_4hrs)
 
-pdf(file = "./202305_DBFX_Females_Sable_8WKRC_EE_4hrs_Line_Plot.pdf", height = 5, width = 7)
+pdf(file = "./output/202305_DBFX_Females_Sable_8WKRC_EE_4hrs_Line_Plot.pdf", height = 5, width = 7)
 
 opar <- theme_update(panel.grid.major = element_blank(),
                      panel.grid.minor = element_blank(),
@@ -1149,9 +1149,9 @@ print(EE_lsmeans_LD)
 EE_lsmeans_LD$emmean <- EE_lsmeans_LD$emmean
 EE_lsmeans_LD$SE <- EE_lsmeans_LD$SE
 EE_lsmeans_LD <- EE_lsmeans_LD[with(EE_lsmeans_LD, order(day_night, Genotype)), ]
-write.table(EE_contrasts_LD, file = "202305_DBFX_Females_Sable_RC_LD_EE_contrasts_LD.csv")
+write.table(EE_contrasts_LD, file = "./output/202305_DBFX_Females_Sable_RC_LD_EE_contrasts_LD.csv")
 
-pdf(file = "./202305_DBFX_Females_Sable_RC_LD_EE.pdf", height = 4, width = 6)
+pdf(file = "./output/202305_DBFX_Females_Sable_RC_LD_EE.pdf", height = 4, width = 6)
 
 EE_LD_mean_mat <- t(matrix(c(subset(EE_lsmeans_LD, Genotype == "Ctrl" & day_night == "Dark")$emmean, subset(EE_lsmeans_LD, Genotype == "Ctrl" & day_night == "Light")$emmean, subset(EE_lsmeans_LD, Genotype == "BKO" & day_night == "Dark")$emmean, subset(EE_lsmeans_LD, Genotype == "BKO" & day_night == "Light")$emmean), 2, 2)) # create a 2-by-2 matrix, then transpose it
 colnames(EE_LD_mean_mat) <- c("Dark", "Light")
@@ -1200,9 +1200,9 @@ print(EE_lsmeans_Daily)
 EE_lsmeans_Daily$emmean <- EE_lsmeans_Daily$emmean
 EE_lsmeans_Daily$SE <- EE_lsmeans_Daily$SE
 EE_lsmeans_Daily <- EE_lsmeans_Daily[with(EE_lsmeans_Daily, order(Genotype)), ]
-write.table(EE_contrasts_Daily, file = "202305_DBFX_Females_Sable_RC_Daily_EE_contrasts_Daily.csv")
+write.table(EE_contrasts_Daily, file = "./output/202305_DBFX_Females_Sable_RC_Daily_EE_contrasts_Daily.csv")
 
-pdf(file = "./202305_DBFX_Females_Sable_RC_EE_Amount.pdf", height = 4, width = 6)
+pdf(file = "./output/202305_DBFX_Females_Sable_RC_EE_Amount.pdf", height = 4, width = 6)
 
 EE_Daily_mean_mat <- t(matrix(c(subset(EE_lsmeans_Daily, Genotype == "Ctrl")$emmean, subset(EE_lsmeans_Daily, Genotype == "BKO")$emmean), 1, 2)) # create a 2-by-2 matrix, then transpose it
 rownames(EE_Daily_mean_mat) <- c("Control","BKO")
