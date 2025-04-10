@@ -1228,4 +1228,5 @@ x.abscis <- barplot(
 box(bty="L")
 superpose.eb(x.abscis, EE_Daily_mean_mat, ebl=0, ebu=EE_Daily_se_mat) # +1 SEM, no descending error bar
 legend(x=1, y=3, box.lty=0, legend=rownames(EE_Daily_mean_mat), fill=fillcolours, y.intersp=1)
-dev.off()
+
+dev.off() # close the PDF device
