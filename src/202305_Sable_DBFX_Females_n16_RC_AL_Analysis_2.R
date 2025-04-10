@@ -53,9 +53,10 @@ superpose.eb <- function (x, y, ebl, ebu = ebl, length = 0.08, ...)
   arrows(x, y + ebu, x, y - ebl, angle = 90, code = 3,
          length = length, ...)
 
-setwd("~/Desktop/OneDrive - Northwestern University/202305_Sable_DATBFX_Females_n16_AL_RC/")
+# setwd("~/Desktop/OneDrive - Northwestern University/202305_Sable_DATBFX_Females_n16_AL_RC/")
+# data <- read.csv("./202305_DATBFX_Females_RC_AL_Sable_n16.csv")
 
-data <- read.csv("./202305_DATBFX_Females_RC_AL_Sable_n16.csv")
+data <- read.csv("C:/Users/nwald/OneDrive/Desktop/202305_Sable_DATBFX_Females_n16_AL_RC/202305_DATBFX_Females_RC_AL_Sable_n16.csv")
 
 data <-
   data %>%
@@ -780,7 +781,7 @@ dev.off()
 
 ###### VO2 Analysis (4 hours)
 
-VO2_4hrs <- lmer(Avg_VO2_4hrs ~ Genotype*four_hours + (1|Animal), data=data2, REML = TRUE)
+VO2_4hrs <- lmer(Avg_VO2_4hrs ~ Genotype*four_hours + BodyMass_g + (1|Animal), data=data2, REML = TRUE)
 
 Anova(VO2_4hrs)
 
@@ -819,7 +820,7 @@ dev.off()
 
 ##### VO2 Analysis (Day vs Night)
 
-VO2_LD <- lmer(Avg_VO2_LD ~ Genotype*day_night + (1|Animal) + (1|StartDate), data=data2)
+VO2_LD <- lmer(Avg_VO2_LD ~ Genotype*day_night + BodyMass_g + (1|Animal) + (1|StartDate), data=data2)
 
 Anova(VO2_LD)
 
@@ -870,7 +871,7 @@ dev.off()
 
 ## Total Daily VO2
 
-VO2_Daily <- lmer(Avg_VO2_Daily ~ Genotype + InitMass_g + (1|StartDate) + (1|Animal), data=data2, REML = TRUE)
+VO2_Daily <- lmer(Avg_VO2_Daily ~ Genotype + BodyMass_g + (1|StartDate) + (1|Animal), data=data2, REML = TRUE)
 
 Anova(VO2_Daily)
 
@@ -922,36 +923,36 @@ dev.off()
 
 pdf(file = "./202305_DBFX_Females_Chronic_Body_Weights.pdf", height = 4, width = 6)
 
-var.test(InitMass_g ~ Genotype, data = data2)
-weight_ttest <- t.test(InitMass_g ~ Genotype, data = data2, var.equal = T)
+# var.test(InitMass_g ~ Genotype, data = data2) # commenting out since no InitMass_g variable in data2
+# weight_ttest <- t.test(InitMass_g ~ Genotype, data = data2, var.equal = T)
 
-names(weight_ttest)
+# names(weight_ttest)
 
-Weight_mean_mat <- t(matrix(c(weight_ttest$estimate[2], weight_ttest$estimate[1]), 1, 2)) # create a 2-by-2 matrix, then transpose it
-rownames(Weight_mean_mat) <- c("Control", "BKO")
+# Weight_mean_mat <- t(matrix(c(weight_ttest$estimate[2], weight_ttest$estimate[1]), 1, 2)) # create a 2-by-2 matrix, then transpose it
+# rownames(Weight_mean_mat) <- c("Control", "BKO")
 
-Weight_se_mat <- t(matrix(c(weight_ttest$stderr[2], weight_ttest$stderr[1]), 1, 2)) # create a 2-by-2 matrix, then transpose it
-rownames(Weight_se_mat) <- c("Control","BKO")
+# Weight_se_mat <- t(matrix(c(weight_ttest$stderr[2], weight_ttest$stderr[1]), 1, 2)) # create a 2-by-2 matrix, then transpose it
+# rownames(Weight_se_mat) <- c("Control","BKO")
 
-fillcolours = c("dark violet","gray")
-x.abscis <- barplot(
-  Weight_mean_mat, beside=TRUE,
-  col=fillcolours,
-  space=c(0.4,0.4), # spacing between bars in the same group, and then between groups
-  width=0.2, # bar widths
-  ylim=c(0,50),
-  yaxp=c(0,50,10),
-  ylab="Boddy Mass (g)",
-  xlim=c(0,1.5), # makes sense in the context of width and space parameters
-  xlab="Treatment",
-  axis.lty=1, # enable tick marks on the X axis
-  main="Body Mass by Group",
-  font.lab=2 # boDaily for axis labels
-)
-box(bty="L")
-superpose.eb(x.abscis, Weight_mean_mat, ebl=0, ebu=Weight_se_mat) # +1 SEM, no descending error bar
-legend(x=1, y=40, box.lty=0, legend=rownames(Weight_mean_mat), fill=fillcolours, y.intersp=1)
-dev.off()
+# fillcolours = c("dark violet","gray")
+# x.abscis <- barplot(
+#   Weight_mean_mat, beside=TRUE,
+#   col=fillcolours,
+#   space=c(0.4,0.4), # spacing between bars in the same group, and then between groups
+#   width=0.2, # bar widths
+#   ylim=c(0,50),
+#   yaxp=c(0,50,10),
+#   ylab="Boddy Mass (g)",
+#   xlim=c(0,1.5), # makes sense in the context of width and space parameters
+#   xlab="Treatment",
+#   axis.lty=1, # enable tick marks on the X axis
+#   main="Body Mass by Group",
+#   font.lab=2 # boDaily for axis labels
+# )
+# box(bty="L")
+# superpose.eb(x.abscis, Weight_mean_mat, ebl=0, ebu=Weight_se_mat) # +1 SEM, no descending error bar
+# legend(x=1, y=40, box.lty=0, legend=rownames(Weight_mean_mat), fill=fillcolours, y.intersp=1)
+# dev.off()
 
 ###### RER Analysis (4 hours)
 
@@ -1092,7 +1093,7 @@ dev.off()
 
 ###### EE Analysis (4 hours)
 
-EE_4hrs <- lmer(Avg_EE_4hrs ~ Genotype*four_hours + InitMass_g + (StartDate|Animal), data=data2, REML = TRUE)
+EE_4hrs <- lmer(Avg_EE_4hrs ~ Genotype*four_hours + BodyMass_g + (StartDate|Animal), data=data2, REML = TRUE)
 
 Anova(EE_4hrs)
 
@@ -1131,7 +1132,7 @@ dev.off()
 
 ##### EE Analysis (Day vs Night)
 
-EE_LD <- lmer(Avg_EE_LD ~ Genotype*day_night + InitMass_g + (StartDate|Animal), data=data2, REML = TRUE)
+EE_LD <- lmer(Avg_EE_LD ~ Genotype*day_night + BodyMass_g + (StartDate|Animal), data=data2, REML = TRUE)
 
 Anova(EE_LD)
 
@@ -1182,7 +1183,7 @@ dev.off()
 
 ## Total Daily EE
 
-EE_Daily <- lmer(Avg_EE_Daily ~ Genotype*StartDate + InitMass_g + (StartDate|Animal), data=data2, REML = TRUE)
+EE_Daily <- lmer(Avg_EE_Daily ~ Genotype*StartDate + BodyMass_g + (StartDate|Animal), data=data2, REML = TRUE)
 
 Anova(EE_Daily)
 
