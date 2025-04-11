@@ -325,7 +325,9 @@ aggregate(UptakeA_Sum ~ Animal, data = data2, FUN = mean)
 
 #data2 <- data2[-which(data$id_code %in% excluded),]
 
-
+##############################################################
+##### Food Intake Analysis (4hrs)####
+##############################################################
 # FoodIntake_4hrs <- glm(UptakeA_Sum ~ Genotype + four_hours, data=data2)
 FoodIntake_4hrs <- lmer(UptakeASum_4hrs ~ Genotype*four_hours + (1|Animal), data=data2, REML = TRUE)
 
@@ -376,8 +378,9 @@ superpose.eb(x.abscis, foodintake_4hrs_mean_mat, ebl=0, ebu=foodintake_4hrs_se_m
 legend(x=2, y=1, box.lty=0, legend=rownames(foodintake_4hrs_mean_mat), fill=fillcolours, y.intersp=1)
 dev.off()
 
-##### Food Intake Analysis (Day vs Night)
-
+##############################################################
+##### Food Intake Analysis (Day vs Night)####
+##############################################################
 FoodIntake_LD <- lmer(UptakeASum_LD ~ Genotype*day_night + (1|Animal), data=data2, REML = TRUE)
 
 Anova(FoodIntake_LD)
@@ -430,7 +433,10 @@ superpose.eb(x.abscis, foodintake_LD_mean_mat, ebl=0, ebu=foodintake_LD_se_mat) 
 legend(x=1.5, y=2, box.lty=0, legend=rownames(foodintake_LD_mean_mat), fill=fillcolours, y.intersp=1)
 dev.off()
 
-## Total Daily Food Intake
+
+##############################################################
+## Total Daily Food Intake (FoodIntake_Daily)
+##############################################################
 
 aggregate(UptakeASum_Daily ~ Animal:StartDate, data = data2, FUN = mean)
 
@@ -490,7 +496,10 @@ dev.off()
 aggregate(UptakeASum_Daily ~ Animal:StartDate, data = data2, FUN = mean)
 aggregate(UptakeASum_Daily ~ Animal:StartDate, data = data2, FUN = sd)
 
+
+##############################################################
 # Activity 4 Hour Resolution
+##############################################################
 
 #data_activity <- data2[-which(data2$Animal == "3"),]
 
@@ -534,6 +543,7 @@ gp + geom_line(aes(linetype=Genotype), size=.6) +
 theme_set(opar)  
 dev.off()
 
+##############################################################
 ##### Activity Analysis (Day vs Night)
 ################################################START HERE
 Activity_LD <- lmer(AllMeters_LD ~ Genotype*day_night + (1|Animal), data=data2, REML = TRUE)
@@ -585,7 +595,10 @@ superpose.eb(x.abscis, Activity_LD_mean_mat, ebl=0, ebu=Activity_LD_se_mat) # +1
 legend(x=1.5, y=2, box.lty=0, legend=rownames(Activity_LD_mean_mat), fill=fillcolours, y.intersp=1)
 dev.off()
 
+
+##############################################################
 ## Total Daily Activity
+##############################################################
 
 Activity_Daily <- lmer(AllMeters_Daily ~ Genotype + (1|StartDate) + (1|Animal), data=data2, REML = TRUE)
 
@@ -636,11 +649,13 @@ dev.off()
 
 ## Average Activity by Mouse
 
-
 aggregate(AllMeters_Daily ~ Animal:StartDate, data = data, FUN = mean)
 aggregate(AllMeters ~ Animal, data = data, FUN = sd)
 
+
+##############################################################
 ###### Sleep_Percent Analysis (4 hours)
+##############################################################
 
 Sleep_Percent_4hrs <- lmer(Sleep_pct_4hrs ~ Genotype*four_hours + (1|Animal), data=data2, REML = TRUE)
 
@@ -679,7 +694,9 @@ gp + geom_line(aes(linetype=Genotype), size=.6) +
 theme_set(opar)  
 dev.off()
 
+##############################################################
 ##### Sleep_Percent Analysis (Day vs Night)
+##############################################################
 
 Sleep_Percent_LD <- lmer(Sleep_pct_LD ~ Genotype*day_night + (1|Animal), data=data2, REML = TRUE)
 
@@ -730,7 +747,10 @@ superpose.eb(x.abscis, Sleep_Percent_LD_mean_mat, ebl=0, ebu=Sleep_Percent_LD_se
 legend(x=1.5, y=2, box.lty=0, legend=rownames(Sleep_Percent_LD_mean_mat), fill=fillcolours, y.intersp=1)
 dev.off()
 
+
+##############################################################
 ## Total Daily Sleep_Percent
+##############################################################
 
 Sleep_Percent_Daily <- lmer(Sleep_pct_Daily ~ Genotype + (1|StartDate) + (1|Animal), data=data2, REML = TRUE)
 
@@ -779,7 +799,9 @@ superpose.eb(x.abscis, Sleep_Percent_Daily_mean_mat, ebl=0, ebu=Sleep_Percent_Da
 legend(x=1, y=3, box.lty=0, legend=rownames(Sleep_Percent_Daily_mean_mat), fill=fillcolours, y.intersp=1)
 dev.off()
 
+##############################################################
 ###### VO2 Analysis (4 hours)
+##############################################################
 
 VO2_4hrs <- lmer(Avg_VO2_4hrs ~ Genotype*four_hours + BodyMass_g + (1|Animal), data=data2, REML = TRUE)
 
@@ -818,7 +840,9 @@ gp + geom_line(aes(linetype=Genotype), size=.6) +
 theme_set(opar)  
 dev.off()
 
+##############################################################
 ##### VO2 Analysis (Day vs Night)
+##############################################################
 
 VO2_LD <- lmer(Avg_VO2_LD ~ Genotype*day_night + BodyMass_g + (1|Animal) + (1|StartDate), data=data2)
 
@@ -954,7 +978,10 @@ dev.off()
 # legend(x=1, y=40, box.lty=0, legend=rownames(Weight_mean_mat), fill=fillcolours, y.intersp=1)
 # dev.off()
 
+
+##############################################################
 ###### RER Analysis (4 hours)
+##############################################################
 
 RER_4hrs <- lmer(Avg_RER_4hrs ~ Genotype*four_hours + (1|Animal), data=data2, REML = TRUE, control = lmerControl(optimizer ="Nelder_Mead"))
 
@@ -1042,7 +1069,10 @@ superpose.eb(x.abscis, RER_LD_mean_mat, ebl=0, ebu=RER_LD_se_mat) # +1 SEM, no d
 legend(x=1.5, y=2, box.lty=0, legend=rownames(RER_LD_mean_mat), fill=fillcolours, y.intersp=1)
 dev.off()
 
+
+##############################################################
 ## Total Daily RER
+##############################################################
 
 RER_Daily <- lmer(Avg_RER_Daily ~ Genotype + (1|StartDate) + (1|Animal), data=data2, REML = TRUE)
 
@@ -1091,7 +1121,10 @@ superpose.eb(x.abscis, RER_Daily_mean_mat, ebl=0, ebu=RER_Daily_se_mat) # +1 SEM
 legend(x=1, y=3, box.lty=0, legend=rownames(RER_Daily_mean_mat), fill=fillcolours, y.intersp=1)
 dev.off()
 
+
+##############################################################
 ###### EE Analysis (4 hours)
+##############################################################
 
 EE_4hrs <- lmer(Avg_EE_4hrs ~ Genotype*four_hours + BodyMass_g + (StartDate|Animal), data=data2, REML = TRUE)
 
@@ -1130,7 +1163,10 @@ gp + geom_line(aes(linetype=Genotype), size=.6) +
 theme_set(opar)  
 dev.off()
 
+
+##############################################################
 ##### EE Analysis (Day vs Night)
+##############################################################
 
 EE_LD <- lmer(Avg_EE_LD ~ Genotype*day_night + BodyMass_g + (StartDate|Animal), data=data2, REML = TRUE)
 
@@ -1181,7 +1217,10 @@ superpose.eb(x.abscis, EE_LD_mean_mat, ebl=0, ebu=EE_LD_se_mat) # +1 SEM, no des
 legend(x=1.5, y=2, box.lty=0, legend=rownames(EE_LD_mean_mat), fill=fillcolours, y.intersp=1)
 dev.off()
 
+
+##############################################################
 ## Total Daily EE
+##############################################################
 
 EE_Daily <- lmer(Avg_EE_Daily ~ Genotype*StartDate + BodyMass_g + (StartDate|Animal), data=data2, REML = TRUE)
 
