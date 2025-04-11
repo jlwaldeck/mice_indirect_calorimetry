@@ -325,9 +325,12 @@ aggregate(UptakeA_Sum ~ Animal, data = data2, FUN = mean)
 
 #data2 <- data2[-which(data$id_code %in% excluded),]
 
+
+
 ##############################################################
 ##### Food Intake Analysis (4hrs)####
 ##############################################################
+
 # FoodIntake_4hrs <- glm(UptakeA_Sum ~ Genotype + four_hours, data=data2)
 FoodIntake_4hrs <- lmer(UptakeASum_4hrs ~ Genotype*four_hours + (1|Animal), data=data2, REML = TRUE)
 
@@ -405,33 +408,59 @@ print(Food_Intake_lsmeans_LD)
 
 pdf(file = "./output/202305_DBFX_Females_Sable_RC_LD_Feeding_Amount.pdf", height = 4, width = 6)
 
-foodintake_LD_mean_mat <- t(matrix(c(subset(Food_Intake_lsmeans_LD, Genotype == "Ctrl" & day_night == "Dark")$emmean, subset(Food_Intake_lsmeans_LD, Genotype == "Ctrl" & day_night == "Light")$emmean, subset(Food_Intake_lsmeans_LD, Genotype == "BKO" & day_night == "Dark")$emmean, subset(Food_Intake_lsmeans_LD, Genotype == "BKO" & day_night == "Light")$emmean), 2, 2)) # create a 2-by-2 matrix, then transpose it
-colnames(foodintake_LD_mean_mat) <- c("Dark", "Light")
-rownames(foodintake_LD_mean_mat) <- c("Control","BKO")
+# foodintake_LD_mean_mat <- t(matrix(c(subset(Food_Intake_lsmeans_LD, Genotype == "Ctrl" & day_night == "Dark")$emmean, subset(Food_Intake_lsmeans_LD, Genotype == "Ctrl" & day_night == "Light")$emmean, subset(Food_Intake_lsmeans_LD, Genotype == "BKO" & day_night == "Dark")$emmean, subset(Food_Intake_lsmeans_LD, Genotype == "BKO" & day_night == "Light")$emmean), 2, 2)) # create a 2-by-2 matrix, then transpose it
+# colnames(foodintake_LD_mean_mat) <- c("Dark", "Light")
+# rownames(foodintake_LD_mean_mat) <- c("Control","BKO")
 
-foodintake_LD_se_mat <- t(matrix(c(subset(Food_Intake_lsmeans_LD, Genotype == "Ctrl" & day_night == "Dark")$SE, subset(Food_Intake_lsmeans_LD, Genotype == "Ctrl" & day_night == "Light")$SE, subset(Food_Intake_lsmeans_LD, Genotype == "BKO" & day_night == "Dark")$SE, subset(Food_Intake_lsmeans_LD, Genotype == "BKO" & day_night == "Light")$SE), 2, 2)) # create a 2-by-2 matrix, then transpose it
-colnames(foodintake_LD_mean_mat) <- c("Dark", "Light")
-rownames(foodintake_LD_mean_mat) <- c("Control","BKO")
+# foodintake_LD_se_mat <- t(matrix(c(subset(Food_Intake_lsmeans_LD, Genotype == "Ctrl" & day_night == "Dark")$SE, subset(Food_Intake_lsmeans_LD, Genotype == "Ctrl" & day_night == "Light")$SE, subset(Food_Intake_lsmeans_LD, Genotype == "BKO" & day_night == "Dark")$SE, subset(Food_Intake_lsmeans_LD, Genotype == "BKO" & day_night == "Light")$SE), 2, 2)) # create a 2-by-2 matrix, then transpose it
+# colnames(foodintake_LD_mean_mat) <- c("Dark", "Light")
+# rownames(foodintake_LD_mean_mat) <- c("Control","BKO")
 
-fillcolours = c("dark violet","gray")
-x.abscis <- barplot(
-  foodintake_LD_mean_mat, beside=TRUE,
-  col=fillcolours,
-  space=c(0.1,0.4), # spacing between bars in the same group, and then between groups
-  width=0.3, # bar widths
-  ylim=c(0,3),
-  yaxp=c(0,3,12),
-  ylab="Average Food Consumed (g)",
-  xlim=c(0.1,2), # makes sense in the context of width and space parameters
-  xlab="Time Point",
-  axis.lty=1, # enable tick marks on the X axis
-  main="Average Total Food Consumption (Day vs Night)",
-  font.lab=2 # bold for axis labels
-)
-box(bty="L")
-superpose.eb(x.abscis, foodintake_LD_mean_mat, ebl=0, ebu=foodintake_LD_se_mat) # +1 SEM, no descending error bar
-legend(x=1.5, y=2, box.lty=0, legend=rownames(foodintake_LD_mean_mat), fill=fillcolours, y.intersp=1)
-dev.off()
+predicted_values_FoodIntake_LD <- data2 %>% 
+
+  group_by(data2$Animal, data2$Genotype, data2$day_night) %>% 
+
+  summarise(Predicted_Value = mean(predict(FoodIntake_LD, newdata = cur_data(), re.form = ~(1 | Animal))), .groups = 'drop')  
+
+colnames(predicted_values_FoodIntake_LD) <- c("Animal", "Genotype", "day_night", "Predicted_value") 
+
+
+# fillcolours = c("dark violet","gray")
+# x.abscis <- barplot(
+#   foodintake_LD_mean_mat, beside=TRUE,
+#   col=fillcolours,
+#   space=c(0.1,0.4), # spacing between bars in the same group, and then between groups
+#   width=0.3, # bar widths
+#   ylim=c(0,3),
+#   yaxp=c(0,3,12),
+#   ylab="Average Food Consumed (g)",
+#   xlim=c(0.1,2), # makes sense in the context of width and space parameters
+#   xlab="Time Point",
+#   axis.lty=1, # enable tick marks on the X axis
+#   main="Average Total Food Consumption (Day vs Night)",
+#   font.lab=2 # bold for axis labels
+# )
+# box(bty="L")
+# superpose.eb(x.abscis, foodintake_LD_mean_mat, ebl=0, ebu=foodintake_LD_se_mat) # +1 SEM, no descending error bar
+# legend(x=1.5, y=2, box.lty=0, legend=rownames(foodintake_LD_mean_mat), fill=fillcolours, y.intersp=1)
+# dev.off()
+
+ggplot() +
+
+  geom_col(data = Food_Intake_lsmeans_LD, aes(x = interaction(day_night, Genotype), y = emmean, fill = Genotype), position = position_dodge(), alpha = 0.7) + 
+
+  geom_errorbar(data = Food_Intake_lsmeans_LD, aes(x = interaction(day_night, Genotype), y = emmean, ymin = emmean - SE, ymax = emmean + SE, group = Genotype), width = 0.2, position = position_dodge(.9)) + 
+
+  geom_jitter(data = predicted_values_FoodIntake_LD, aes(x = interaction(day_night, Genotype), y = Predicted_value, color = Genotype), width = 0.2, size = 2, alpha = 0.7) + 
+
+  theme_minimal() + 
+
+  labs(y = "IR Beam Breaks", x = "day_night:Genotype", title = "DAT-BKO Activity") 
+
+  
+
+dev.off() 
+
 
 
 ##############################################################
