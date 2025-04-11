@@ -921,7 +921,7 @@ dev.off()
 
 ## Body Weight Analysis
 
-pdf(file = "./output/202305_DBFX_Females_Chronic_Body_Weights.pdf", height = 4, width = 6)
+# pdf(file = "./output/202305_DBFX_Females_Chronic_Body_Weights.pdf", height = 4, width = 6)
 
 # var.test(InitMass_g ~ Genotype, data = data2) # commenting out since no InitMass_g variable in data2
 # weight_ttest <- t.test(InitMass_g ~ Genotype, data = data2, var.equal = T)
