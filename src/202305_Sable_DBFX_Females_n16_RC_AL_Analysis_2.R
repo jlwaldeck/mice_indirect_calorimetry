@@ -441,7 +441,7 @@ Anova(FoodIntake_Daily)
 var.test(UptakeASum_Daily ~ Genotype, data=data2)
 t.test(UptakeASum_Daily ~ Genotype, data=data2, var.equal = F)
 
-Food_Intake_emmeans_Daily <- emmeans(FoodIntake_Daily, list(pairwise ~ Genotype), adjust = "tukey")
+Food_Intake_emmeans_Daily <- emmeans(FoodIntake_Daily, list(pairwise ~ Genotype), adjust = "fdr")
 
 Food_Intake_lsmeans_Daily <- Food_Intake_emmeans_Daily$`emmeans of Genotype`
 
@@ -501,7 +501,7 @@ Activity_4hrs <- lmer(AllMeters_4hrs ~ Genotype*four_hours + (1|Animal), data=da
 
 Anova(Activity_4hrs)
 
-Activity_emmeans_4hrs <- emmeans(Activity_4hrs, list(pairwise ~ Genotype:four_hours), adjust = "tukey")
+Activity_emmeans_4hrs <- emmeans(Activity_4hrs, list(pairwise ~ Genotype:four_hours), adjust = "fdr")
 
 Activity_lsmeans_4hrs <- Activity_emmeans_4hrs$`emmeans of Genotype, four_hours`
 
@@ -591,7 +591,7 @@ Activity_Daily <- lmer(AllMeters_Daily ~ Genotype + (1|StartDate) + (1|Animal), 
 
 Anova(Activity_Daily)
 
-Activity_emmeans_Daily <- emmeans(Activity_Daily, list(pairwise ~ Genotype), adjust = "tukey")
+Activity_emmeans_Daily <- emmeans(Activity_Daily, list(pairwise ~ Genotype), adjust = "fdr")
 
 Activity_lsmeans_Daily <- Activity_emmeans_Daily$`emmeans of Genotype`
 
@@ -736,7 +736,7 @@ Sleep_Percent_Daily <- lmer(Sleep_pct_Daily ~ Genotype + (1|StartDate) + (1|Anim
 
 Anova(Sleep_Percent_Daily)
 
-Sleep_Percent_emmeans_Daily <- emmeans(Sleep_Percent_Daily, list(pairwise ~ Genotype), adjust = "tukey")
+Sleep_Percent_emmeans_Daily <- emmeans(Sleep_Percent_Daily, list(pairwise ~ Genotype), adjust = "fdr")
 
 Sleep_Percent_lsmeans_Daily <- Sleep_Percent_emmeans_Daily$`emmeans of Genotype`
 
@@ -875,7 +875,7 @@ VO2_Daily <- lmer(Avg_VO2_Daily ~ Genotype + BodyMass_g + (1|StartDate) + (1|Ani
 
 Anova(VO2_Daily)
 
-VO2_emmeans_Daily <- emmeans(VO2_Daily, list(pairwise ~ Genotype), adjust = "tukey")
+VO2_emmeans_Daily <- emmeans(VO2_Daily, list(pairwise ~ Genotype), adjust = "fdr")
 
 VO2_lsmeans_Daily <- VO2_emmeans_Daily$`emmeans of Genotype`
 
@@ -997,7 +997,7 @@ dev.off()
 
 RER_LD <- lmer(Avg_RER_LD ~ Genotype*day_night + (StartDate|Animal), data=data2, REML = TRUE)
 
-RER_emmeans_LD <- emmeans(RER_LD, list(pairwise ~ Genotype:day_night), adjust = "tukey")
+RER_emmeans_LD <- emmeans(RER_LD, list(pairwise ~ Genotype:day_night), adjust = "fdr")
 
 RER_lsmeans_LD <- RER_emmeans_LD$`emmeans of Genotype, day_night`
 
@@ -1048,7 +1048,7 @@ RER_Daily <- lmer(Avg_RER_Daily ~ Genotype + (1|StartDate) + (1|Animal), data=da
 
 Anova(RER_Daily)
 
-RER_emmeans_Daily <- emmeans(RER_Daily, list(pairwise ~ Genotype), adjust = "tukey")
+RER_emmeans_Daily <- emmeans(RER_Daily, list(pairwise ~ Genotype), adjust = "fdr")
 
 RER_lsmeans_Daily <- RER_emmeans_Daily$`emmeans of Genotype`
 
@@ -1187,7 +1187,7 @@ EE_Daily <- lmer(Avg_EE_Daily ~ Genotype*StartDate + BodyMass_g + (StartDate|Ani
 
 Anova(EE_Daily)
 
-EE_emmeans_Daily <- emmeans(EE_Daily, list(pairwise ~ Genotype), adjust = "tukey")
+EE_emmeans_Daily <- emmeans(EE_Daily, list(pairwise ~ Genotype), adjust = "fdr")
 
 EE_lsmeans_Daily <- EE_emmeans_Daily$`emmeans of Genotype`
 
