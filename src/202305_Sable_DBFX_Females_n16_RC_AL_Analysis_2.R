@@ -325,9 +325,9 @@ aggregate(UptakeA_Sum ~ Animal, data = data2, FUN = mean)
 
 #data2 <- data2[-which(data$id_code %in% excluded),]
 
-#FoodIntake_4hrs <- lmer(UptakeASum_4hrs ~ Genotype*four_hours + (1|Animal), data=data2, REML = TRUE)
 
-FoodIntake_4hrs <- glm(UptakeA_Sum ~ Genotype + four_hours, data=data2)
+# FoodIntake_4hrs <- glm(UptakeA_Sum ~ Genotype + four_hours, data=data2)
+FoodIntake_4hrs <- lmer(UptakeASum_4hrs ~ Genotype*four_hours + (1|Animal), data=data2, REML = TRUE)
 
 Anova(FoodIntake_4hrs)
 
