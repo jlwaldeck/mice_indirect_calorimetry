@@ -1,0 +1,28 @@
+column_mappings:
+  Animal:
+    mapping:
+      "1": "BKO"
+      "2": "Ctrl"
+      "3": "BKO"
+      "4": "Ctrl"
+      "5": "BKO"
+      "6": "Ctrl"
+      "7": "BKO"
+      "8": "Ctrl"
+      "9": "BKO"
+      "10": "Ctrl"
+      "11": "BKO"
+      "12": "Ctrl"
+      "13": "BKO"
+      "14": "Ctrl"
+      "15": "BKO"
+      "16": "Ctrl"
+    default: "Low"
+    dtype: str
+  AnotherColumn:
+    mapping:
+      "A": "Type1"
+      "B": "Type2"
+      "C": "Type3"
+    default: "Unknown"
+    dtype: int

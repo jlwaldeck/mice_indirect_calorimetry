@@ -1,49 +1,42 @@
+import os
 import pandas as pd
+import yaml
+from data_processing import transform_via_map
 
-# TODO: Add logging
+# TODO: Move this path to a config file or environment variable
+raw_data_path = ('C:/Users/nwald/OneDrive/Desktop/202305_Sable_DATBFX_Females_n16_AL_RC/202305_DATBFX_Females_RC_AL_Sable_n16.csv')
 
-file_path = 'C:/Users/nwald/OneDrive/Desktop/202305_Sable_DATBFX_Females_n16_AL_RC/202305_DATBFX_Females_RC_AL_Sable_n16.csv'
+# Dynamically determine the path to the YAML file
+script_dir = os.path.dirname(__file__)
+config_file_path = os.path.join(script_dir, 'config.yaml')
+
+# Load the YAML configuration
+with open(config_file_path, 'r') as file:
+    config = yaml.safe_load(file)
+
+column_mappings = config['column_mappings']
 
 def load_data(file_path):
     """Load data from a CSV file."""
     try:
         data = pd.read_csv(file_path)
-        print(data.shape)
+        print(f"Data loaded successfully from {file_path}")
+        print(f"Data shape: {data.shape}")
         return data
     except Exception as e:
         print(f"Error loading data: {e}")
         return None
-    
-
-def set_column_types(df):
-    """Set the column types for the DataFrame."""
-    df['Animal'] = df['Animal'].astype(str)
-    return df
-    
-
-def transform_via_map(df):
-    """Transform the 'Animal' column to 'Genotype' using a mapping."""
-
-    # Define the mapping for the 'Animal' column
-    genotype_mapping = {
-        "1": "BKO", "2": "Ctrl", "3": "BKO", "4": "Ctrl",
-        "5": "BKO", "6": "Ctrl", "7": "BKO", "8": "Ctrl",
-        "9": "BKO", "10": "Ctrl", "11": "BKO", "12": "Ctrl",
-        "13": "BKO", "14": "Ctrl", "15": "BKO", "16": "Ctrl"
-    }
-
-    # Apply the mapping to create the 'Genotype' column
-    df['Genotype'] = df['Animal'].map(genotype_mapping).fillna('Low')
-
-    return df
-    
 
 def main():
-    raw_data = load_data(file_path)
-    raw_data = set_column_types(raw_data)
-    df = transform_via_map(raw_data)
+
+    raw_data = load_data(raw_data_path)  # Load the raw data
+    df = transform_via_map(raw_data, column_mappings)  # Apply mappings based on config
+    
+    # TODO: Replace with logger statements and/or assertions as needed
     if df is not None:
         print(df.head())
+    else:
+        print("No data to display after transformation.")
 
 if __name__ == "__main__":
     main()
