@@ -1,4 +1,4 @@
-column_mappings:
+column_value_mappings:
   Genotype:
     source: "Animal"
     target: "Genotype"

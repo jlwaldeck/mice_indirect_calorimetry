@@ -26,13 +26,11 @@ def apply_mapping(df, column_config):
     source_column = column_config.get('source')
     target_column = column_config.get('target')
     mapping = column_config.get('mapping', {})
-    print(mapping)
     default_value = column_config.get('default', None)
     dtype = column_config.get('dtype', None)  # Get the desired data type
 
     # Apply the specified data type to the new column if provided
     if dtype:
-        print(dtype)
         df[source_column] = df[source_column].astype(dtype)
 
     if not source_column or not target_column:

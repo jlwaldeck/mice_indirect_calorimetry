@@ -8,12 +8,12 @@ raw_data_path = ('C:/Users/nwald/OneDrive/Desktop/202305_Sable_DATBFX_Females_n1
 
 # Dynamically determine the path to the YAML file
 script_dir = os.path.dirname(__file__)
-config_file_path = os.path.join(script_dir, 'config.yaml')
+config_file_path = os.path.join(script_dir, '../config/column_mapping.yaml')
 
 # Load the columm mapping configuration from YAML
 with open(config_file_path, 'r') as file:
     config = yaml.safe_load(file)
-column_mappings = config['column_mappings']
+column_mappings = config['column_value_mappings']
 
 
 def main():
@@ -23,11 +23,7 @@ def main():
     
     # TODO: Replace with logger statements and/or assertions as needed
     if df is not None:
-        print(df.tail())
-        print(df['four_hours'].unique())
-        print(df['two_hours'].unique())
-        print(df['one_hour'].unique())
-        print(df['day_night'].unique())
+        print(df.head())
     else:
         print("No data to display after transformation.")
 
