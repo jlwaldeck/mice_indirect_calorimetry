@@ -13,17 +13,17 @@ col_group_agg_file_path = os.path.join(script_dir, '../config/group_aggregation.
 # Load the columm mapping configuration from YAML
 with open(col_value_map_file_path, 'r') as file:
     config = yaml.safe_load(file)
-column_mappings = config.get('column_value_mappings')
+column_mappings = config.get('column_value_mappings', {})
 
 # Load the grouping/aggregation configuration from YAML
 with open(col_group_agg_file_path, 'r') as file:
     config = yaml.safe_load(file)
-grouping_config = config.get('column_group_agg_ops')
+grouping_config = config.get('column_group_agg_ops', {})
 
 # Load the general configuration from YAML
 with open(gen_config_file_path, 'r') as file:
     config = yaml.safe_load(file)
-general_config = config.get('general_settings', {})
+general_config = config.get('general_settings')
 data_filters = config.get('data_filters', {})
 
 # Retrieve the raw_data_path from the general configuration
