@@ -38,7 +38,7 @@ def main():
     df = transform_via_map(df, column_mappings)  # Apply mappings listed in column_mapping config
     df = apply_grouping_operations(df, grouping_config) # Apply grouping and aggregation operations listed in group_aggregation config
     
-    # TODO: Replace with logger statements and/or assertions as needed
+    # TODO: Replace with logger statements and/or error handling
     if df is not None:
         print(df.head())
     else:
