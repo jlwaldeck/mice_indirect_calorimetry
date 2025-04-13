@@ -3,13 +3,10 @@ import pandas as pd
 import yaml
 from data_processing import load_data, transform_via_map, apply_grouping_operations
 
-# TODO: Move this path to a config file or environment variable
-raw_data_path = ('C:/Users/nwald/OneDrive/Desktop/202305_Sable_DATBFX_Females_n16_AL_RC/202305_DATBFX_Females_RC_AL_Sable_n16.csv')
-# TODO: Add output dictory path to config file or environment variable
-
 # Dynamically determine the path to this script
 script_dir = os.path.dirname(__file__)
 
+gen_config_file_path = os.path.join(script_dir, '../config/general_config.yaml')
 col_value_map_file_path = os.path.join(script_dir, '../config/column_mapping.yaml')
 col_group_agg_file_path = os.path.join(script_dir, '../config/group_aggregation.yaml')
 
@@ -22,6 +19,15 @@ column_mappings = config.get('column_value_mappings')
 with open(col_group_agg_file_path, 'r') as file:
     config = yaml.safe_load(file)
 grouping_config = config.get('column_group_agg_ops')
+
+# Load the general configuration from YAML
+with open(gen_config_file_path, 'r') as file:
+    config = yaml.safe_load(file)
+general_config = config.get('general_settings', {})
+
+# Retrieve the raw_data_path from the general configuration
+raw_data_path = general_config.get('raw_data_path')
+# TODO: Add output dictory path to config file
 
 
 def main():
