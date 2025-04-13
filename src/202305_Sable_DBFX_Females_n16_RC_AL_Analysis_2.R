@@ -1195,6 +1195,8 @@ dev.off()
 ##### Avg_VO2 Analysis (30 min)####
 ##############################################################
 
+data_Avg_VO2_30mins <- data_summary(data2, varname = "Avg_VO2", groupnames = c("Cycle", "Genotype"))
+
 pdf(file = "./output/202305_DATBFX_Females_LD_Sable_RC_AL_Avg_VO2_30mins_Line_Plot.pdf", height = 5, width = 7) 
 
   
@@ -1348,7 +1350,7 @@ Avg_VO2_LD_fit <- lmer(Avg_VO2_LD ~ Genotype*day_night + (1|StartDate) + (1|Anim
 
 Anova(Avg_VO2_LD_fit)
 
-Avg_VO2_emmeans_LD <- emmeans(Avg_VO2_LD_new, list(pairwise ~ Genotype:day_night), adjust = "fdr")
+Avg_VO2_emmeans_LD <- emmeans(Avg_VO2_LD_fit, list(pairwise ~ Genotype:day_night), adjust = "fdr")
 
 Avg_VO2_emmeans_LD
 
@@ -1376,7 +1378,6 @@ colnames(predicted_values) <- c("Animal", "Genotype", "day_night", "Predicted_va
 # Create the plot
 ggplot() +
   geom_col(data = Avg_VO2_lsmeans_LD, aes(x = interaction(day_night, Genotype), y = emmean, fill = Genotype), position = position_dodge(), alpha = 0.7) +
-  scale_y_continuous(limits=c(0,100)) +
   geom_errorbar(data = Avg_VO2_lsmeans_LD, aes(x = interaction(day_night, Genotype), y = emmean, ymin = emmean - SE, ymax = emmean + SE, group = Genotype), width = 0.2, position = position_dodge(.9)) +
   geom_jitter(data = predicted_values, aes(x = interaction(day_night, Genotype), y = Predicted_value, color = Genotype), width = 0.2, size = 2, alpha = 0.7) +
   theme_minimal() +
@@ -1420,7 +1421,6 @@ colnames(predicted_values) <- c("Animal", "Genotype", "Predicted_value")
 # Create the plot
 ggplot() +
   geom_col(data = Avg_VO2_lsmeans_Daily, aes(x = Genotype, y = emmean, fill = Genotype), position = position_dodge(), alpha = 0.7) +
-  scale_y_continuous(limits=c(0,100)) +
   geom_errorbar(data = Avg_VO2_lsmeans_Daily, aes(x = Genotype, y = emmean, ymin = emmean - SE, ymax = emmean + SE, group = Genotype), width = 0.2, position = position_dodge(.9)) +
   geom_jitter(data = predicted_values, aes(x = Genotype, y = Predicted_value, color = Genotype), width = 0.2, size = 2, alpha = 0.7) +
   theme_minimal() +
@@ -1605,6 +1605,8 @@ pdf(file = "./output/202305_DATBFX_Females_Sable_RC_AL_RER_LD.pdf", height = 4, 
 predicted_values_RER_LD <- data2 %>%
   group_by(data2$Animal, data2$Genotype, data2$day_night) %>%
   summarise(Predicted_Value = mean(predict(RER_LD, newdata = cur_data(), re.form = ~(1 | Animal))), .groups = 'drop')
+
+  colnames(predicted_values_RER_LD) <- c("Animal", "Genotype", "day_night", "Predicted_value")
 
    
 
@@ -2196,3 +2198,6 @@ ggplot() +
   
 
 dev.off()
+
+
+##################End of Code##################
