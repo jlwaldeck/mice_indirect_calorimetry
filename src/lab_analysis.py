@@ -27,7 +27,7 @@ general_config = config.get('general_settings', {})
 
 # Retrieve the raw_data_path from the general configuration
 raw_data_path = general_config.get('raw_data_path')
-# TODO: Add output dictory path to config file
+output_path = general_config.get('output_path')
 
 
 def main():
