@@ -47,3 +47,30 @@ def transform_via_map(df, column_mappings):
     for column_name, column_config in column_mappings.items():
         df = apply_mapping(df, column_config)
     return df
+
+
+def apply_grouping_operations(df, grouping_config):
+    """
+    Apply grouping and aggregation operations to the DataFrame based on the configuration.
+    Args:
+        df (pd.DataFrame): The DataFrame to transform.
+        grouping_config (dict): Configuration for grouping and aggregation.
+    Returns:
+        pd.DataFrame: The transformed DataFrame.
+    """
+    for operation_name, config in grouping_config.items():
+        group_by_columns = config.get("group_by", [])
+        aggregation_column = config.get("aggregation", {}).get("column")
+        operation = config.get("aggregation", {}).get("operation")
+        target_column = config.get("target")  # Explicitly get the target column name
+
+        if not group_by_columns or not aggregation_column or not operation or not target_column:
+            raise ValueError(f"Invalid configuration for {operation_name}")
+
+        # Perform grouping and aggregation, and assign the result to the target column
+        df[target_column] = (
+            df.groupby(group_by_columns)[aggregation_column]
+            .transform(operation)
+        )
+
+    return df

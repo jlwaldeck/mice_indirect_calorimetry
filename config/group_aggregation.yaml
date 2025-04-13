@@ -1,0 +1,246 @@
+column_group_agg_ops:
+
+  UptakeASum_1hr:
+    group_by: ["Animal", "StartDate", "one_hour"]
+    aggregation:
+      column: "UptakeA_Sum"
+      operation: "sum"
+    target: "UptakeASum_1hr"
+
+  UptakeASum_2hrs:
+    group_by: ["Animal", "StartDate", "two_hours"]
+    aggregation:
+      column: "UptakeA_Sum"
+      operation: "sum"
+    target: "UptakeASum_2hrs"
+
+  UptakeASum_4hrs:
+    group_by: ["Animal", "StartDate", "four_hours"]
+    aggregation:
+      column: "UptakeA_Sum"
+      operation: "sum"
+    target: "UptakeASum_4hrs"
+
+  UptakeASum_LD:
+    group_by: ["Animal", "StartDate", "day_night"]
+    aggregation:
+      column: "UptakeA_Sum"
+      operation: "sum"
+    target: "UptakeASum_LD"
+
+  UptakeASum_Daily:
+    group_by: ["Animal", "StartDate"]
+    aggregation:
+      column: "UptakeA_Sum"
+      operation: "sum"
+    target: "UptakeASum_Daily"
+
+  AllMeters_1hr:
+    group_by: ["Animal", "StartDate", "one_hour"]
+    aggregation:
+      column: "AllMeters"
+      operation: "sum"
+    target: "AllMeters_1hr"
+
+  AllMeters_2hrs:
+    group_by: ["Animal", "StartDate", "two_hours"]
+    aggregation:
+      column: "AllMeters"
+      operation: "sum"
+    target: "AllMeters_2hrs"
+
+  AllMeters_4hrs:
+    group_by: ["Animal", "StartDate", "four_hours"]
+    aggregation:
+      column: "AllMeters"
+      operation: "sum"
+    target: "AllMeters_4hrs"
+
+  AllMeters_LD:
+    group_by: ["Animal", "StartDate", "day_night"]
+    aggregation:
+      column: "AllMeters"
+      operation: "sum"
+    target: "AllMeters_LD"
+
+  AllMeters_Daily:
+    group_by: ["Animal", "StartDate"]
+    aggregation:
+      column: "AllMeters"
+      operation: "sum"
+    target: "AllMeters_Daily"
+
+  Sleep_pct_1hr:
+    group_by: ["Animal", "StartDate", "one_hour"]
+    aggregation:
+      column: "Sleep_pct"
+      operation: "mean"
+    target: "Sleep_pct_1hr"
+
+  Sleep_pct_2hrs:
+    group_by: ["Animal", "StartDate", "two_hours"]
+    aggregation:
+      column: "Sleep_pct"
+      operation: "mean"
+    target: "Sleep_pct_2hrs"
+
+  Sleep_pct_4hrs:
+    group_by: ["Animal", "StartDate", "four_hours"]
+    aggregation:
+      column: "Sleep_pct"
+      operation: "mean"
+    target: "Sleep_pct_4hrs"
+
+  Sleep_pct_LD:
+    group_by: ["Animal", "StartDate", "day_night"]
+    aggregation:
+      column: "Sleep_pct"
+      operation: "mean"
+    target: "Sleep_pct_LD"
+
+  Sleep_pct_Daily:
+    group_by: ["Animal", "StartDate"]
+    aggregation:
+      column: "Sleep_pct"
+      operation: "mean"
+    target: "Sleep_pct_Daily"
+
+  Avg_VO2_1hr:
+    group_by: ["Animal", "StartDate", "one_hour"]
+    aggregation:
+      column: "Avg_VO2"
+      operation: "mean"
+    target: "Avg_VO2_1hr"
+
+  Avg_VO2_2hrs:
+    group_by: ["Animal", "StartDate", "two_hours"]
+    aggregation:
+      column: "Avg_VO2"
+      operation: "mean"
+    target: "Avg_VO2_2hrs"
+
+  Avg_VO2_4hrs:
+    group_by: ["Animal", "StartDate", "four_hours"]
+    aggregation:
+      column: "Avg_VO2"
+      operation: "mean"
+    target: "Avg_VO2_4hrs"
+
+  Avg_VO2_LD:
+    group_by: ["Animal", "StartDate", "day_night"]
+    aggregation:
+      column: "Avg_VO2"
+      operation: "mean"
+    target: "Avg_VO2_LD"
+
+  Avg_VO2_Daily:
+    group_by: ["Animal", "StartDate"]
+    aggregation:
+      column: "Avg_VO2"
+      operation: "mean"
+    target: "Avg_VO2_Daily"
+
+  Avg_RQ_1hr:
+    group_by: ["Animal", "StartDate", "one_hour"]
+    aggregation:
+      column: "Avg_RQ"
+      operation: "mean"
+    target: "Avg_RQ_1hr"
+
+  Avg_RQ_2hrs:
+    group_by: ["Animal", "StartDate", "two_hours"]
+    aggregation:
+      column: "Avg_RQ"
+      operation: "mean"
+    target: "Avg_RQ_2hrs"
+
+  Avg_RQ_4hrs:
+    group_by: ["Animal", "StartDate", "four_hours"]
+    aggregation:
+      column: "Avg_RQ"
+      operation: "mean"
+    target: "Avg_RQ_4hrs"
+
+  Avg_RQ_LD:
+    group_by: ["Animal", "StartDate", "day_night"]
+    aggregation:
+      column: "Avg_RQ"
+      operation: "mean"
+    target: "Avg_RQ_LD"
+
+  Avg_RQ_Daily:
+    group_by: ["Animal", "StartDate"]
+    aggregation:
+      column: "Avg_RQ"
+      operation: "mean"
+    target: "Avg_RQ_Daily"
+
+  Avg_EE_1hr:
+    group_by: ["Animal", "StartDate", "one_hour"]
+    aggregation:
+      column: "Avg_EE"
+      operation: "mean"
+    target: "Avg_EE_1hr"
+
+  Avg_EE_2hrs:
+    group_by: ["Animal", "StartDate", "two_hours"]
+    aggregation:
+      column: "Avg_EE"
+      operation: "mean"
+    target: "Avg_EE_2hrs"
+
+  Avg_EE_4hrs:
+    group_by: ["Animal", "StartDate", "four_hours"]
+    aggregation:
+      column: "Avg_EE"
+      operation: "mean"
+    target: "Avg_EE_4hrs"
+
+  Avg_EE_LD:
+    group_by: ["Animal", "StartDate", "day_night"]
+    aggregation:
+      column: "Avg_EE"
+      operation: "mean"
+    target: "Avg_EE_LD"
+
+  Avg_EE_Daily:
+    group_by: ["Animal", "StartDate"]
+    aggregation:
+      column: "Avg_EE"
+      operation: "mean"
+    target: "Avg_EE_Daily"
+
+  Tot_EE_1hr:
+    group_by: ["Animal", "StartDate", "one_hour"]
+    aggregation:
+      column: "Tot_EE"
+      operation: "sum"
+    target: "Tot_EE_1hr"
+
+  Tot_EE_2hrs:
+    group_by: ["Animal", "StartDate", "two_hours"]
+    aggregation:
+      column: "Tot_EE"
+      operation: "sum"
+    target: "Tot_EE_2hrs"
+
+  Tot_EE_4hrs:
+    group_by: ["Animal", "StartDate", "four_hours"]
+    aggregation:
+      column: "Tot_EE"
+      operation: "sum"
+    target: "Tot_EE_4hrs"
+
+  Tot_EE_LD:
+    group_by: ["Animal", "StartDate", "day_night"]
+    aggregation:
+      column: "Tot_EE"
+      operation: "sum"
+    target: "Tot_EE_LD"
+
+  Tot_EE_Daily:
+    group_by: ["Animal", "StartDate"]
+    aggregation:
+      column: "Tot_EE"
+      operation: "sum"
+    target: "Tot_EE_Daily"
