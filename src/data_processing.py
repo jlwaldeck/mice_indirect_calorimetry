@@ -10,6 +10,27 @@ def load_data(file_path):
     except Exception as e:
         print(f"Error loading data: {e}")
         return None
+    
+def apply_filters(df, filters_config):
+    """
+    Apply filters to a DataFrame based on the configuration.
+    Args:
+        df (pd.DataFrame): The DataFrame to filter.
+        filters_config (dict): Configuration for filtering.
+    Returns:
+        pd.DataFrame: The filtered DataFrame.
+    """
+    for column_name, filter_values in filters_config.items():
+        if column_name in df.columns:
+            # Normalize the column and filter values
+            df[column_name] = df[column_name].astype(str).str.strip()
+            filter_values = [str(value).strip() for value in filter_values]
+            
+            # Apply the filter
+            df = df[~df[column_name].isin(filter_values)]
+        else:
+            print(f"Warning: Column '{column_name}' not found in DataFrame. Skipping filter.")
+    return df
 
 
 def apply_mapping(df, column_config):

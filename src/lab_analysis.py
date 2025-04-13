@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 import yaml
-from data_processing import load_data, transform_via_map, apply_grouping_operations
+from data_processing import load_data, transform_via_map, apply_grouping_operations, apply_filters
 
 # Dynamically determine the path to this script
 script_dir = os.path.dirname(__file__)
@@ -24,6 +24,7 @@ grouping_config = config.get('column_group_agg_ops')
 with open(gen_config_file_path, 'r') as file:
     config = yaml.safe_load(file)
 general_config = config.get('general_settings', {})
+data_filters = config.get('data_filters', {})
 
 # Retrieve the raw_data_path from the general configuration
 raw_data_path = general_config.get('raw_data_path')
@@ -32,9 +33,10 @@ output_path = general_config.get('output_path')
 
 def main():
 
-    raw_data = load_data(raw_data_path)  # Load the raw data
-    df = transform_via_map(raw_data, column_mappings)  # Apply mappings based on config
-    df = apply_grouping_operations(df, grouping_config) # Apply grouping and aggregation based on config
+    raw_data = load_data(raw_data_path)  # Load the raw data using path in general_config
+    df = apply_filters(raw_data, data_filters) # Apply filters listed in gerneral_config
+    df = transform_via_map(df, column_mappings)  # Apply mappings listed in column_mapping config
+    df = apply_grouping_operations(df, grouping_config) # Apply grouping and aggregation operations listed in group_aggregation config
     
     # TODO: Replace with logger statements and/or assertions as needed
     if df is not None:
