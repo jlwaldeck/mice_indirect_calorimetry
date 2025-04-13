@@ -50,15 +50,18 @@ def apply_mapping(df, column_config):
     default_value = column_config.get('default', None)
     dtype = column_config.get('dtype', None)  # Get the desired data type
 
-    # Apply the specified data type to the new column if provided
-    if dtype:
-        df[source_column] = df[source_column].astype(dtype)
-
     if not source_column or not target_column:
         raise ValueError("Both 'source' and 'target' must be specified in the column configuration.")
 
+    # Ensure the DataFrame is a copy to avoid SettingWithCopyWarning
+    df = df.copy()
+
+    # Apply the specified data type to the source column if provided
+    if dtype:
+        df.loc[:, source_column] = df[source_column].astype(dtype)
+
     # Create the new column based on the mapping with the default value
-    df[target_column] = df[source_column].map(mapping).fillna(default_value)
+    df.loc[:, target_column] = df[source_column].map(mapping).fillna(default_value)
 
     return df
 
