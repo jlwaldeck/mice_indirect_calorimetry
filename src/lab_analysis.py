@@ -7,7 +7,7 @@ from data_processing import load_data, transform_via_map, apply_grouping_operati
 raw_data_path = ('C:/Users/nwald/OneDrive/Desktop/202305_Sable_DATBFX_Females_n16_AL_RC/202305_DATBFX_Females_RC_AL_Sable_n16.csv')
 # TODO: Add output dictory path to config file or environment variable
 
-# Dynamically determine the path to the YAML file
+# Dynamically determine the path to this script
 script_dir = os.path.dirname(__file__)
 
 col_value_map_file_path = os.path.join(script_dir, '../config/column_mapping.yaml')
