@@ -5,9 +5,6 @@
 
 rm(list = ls())
 
-library(here)
-setwd(here::here())
-
 detachAllPackages <- function() {
   
   basic.packages <- c("package:stats","package:graphics","package:grDevices","package:utils","package:datasets","package:methods","package:base")
