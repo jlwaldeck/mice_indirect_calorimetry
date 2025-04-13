@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import yaml
 from data_processing import load_data, transform_via_map, apply_grouping_operations, apply_filters
+from stats_functions import data_summary
 
 # Dynamically determine the path to this script
 script_dir = os.path.dirname(__file__)
@@ -43,6 +44,10 @@ def main():
         print(df.head())
     else:
         print("No data to display after transformation.")
+
+    # Call the function
+    summary = data_summary(df, varname='UptakeA_Sum', groupnames=['Cycle', 'Genotype'])
+    print(summary.iloc[0:50])
 
 if __name__ == "__main__":
     main()
