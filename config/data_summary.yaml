@@ -14,3 +14,43 @@ data_summaries:
     group: "Genotype"
     output_file: "./output/202305_DATBFX_Females_LD_Sable_RC_AL_Activity_30mins_Line_Plot.pdf"
     title: "Activity (30 mins)"
+
+  - varname: "Sleep_pct"
+    groupnames: ["Cycle", "Genotype"]
+    x_var: "Cycle"
+    y_var: "Sleep_pct"
+    group: "Genotype"
+    output_file: "./output/202305_DATBFX_Females_LD_Sable_RC_AL_Sleep_pct_30mins_Line_Plot.pdf"
+    title: "Sleep Percentage (30 mins)"
+
+  - varname: "Avg_VO2"
+    groupnames: ["Cycle", "Genotype"]
+    x_var: "Cycle"
+    y_var: "Avg_VO2"
+    group: "Genotype"
+    output_file: "./output/202305_DATBFX_Females_LD_Sable_RC_AL_Avg_VO2_30mins_Line_Plot.pdf"
+    title: "Average VO2 (30 mins)"
+
+  - varname: "Avg_RQ"
+    groupnames: ["Cycle", "Genotype"]
+    x_var: "Cycle"
+    y_var: "Avg_RQ"
+    group: "Genotype"
+    output_file: "./output/202305_DATBFX_Females_LD_Sable_RC_AL_Avg_RQ_30mins_Line_Plot.pdf"
+    title: "Average RQ (30 mins)"
+
+  - varname: "Avg_EE"
+    groupnames: ["Cycle", "Genotype"]
+    x_var: "Cycle"
+    y_var: "Avg_EE"
+    group: "Genotype"
+    output_file: "./output/202305_DATBFX_Females_LD_Sable_RC_AL_Avg_EE_30mins_Line_Plot.pdf"
+    title: "Average Energy Expenditure (30 mins)"
+
+  - varname: "Tot_EE"
+    groupnames: ["Cycle", "Genotype"]
+    x_var: "Cycle"
+    y_var: "Tot_EE"
+    group: "Genotype"
+    output_file: "./output/202305_DATBFX_Females_LD_Sable_RC_AL_Tot_EE_30mins_Line_Plot.pdf"
+    title: "Total Energy Expenditure (30 mins)"
