@@ -3,6 +3,8 @@ import pandas as pd
 import yaml
 from data_processing import load_data, transform_via_map, apply_grouping_operations, apply_filters
 from stats_functions import process_data_summaries
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Dynamically determine the path to this script
 script_dir = os.path.dirname(__file__)
@@ -38,6 +40,11 @@ raw_data_path = general_config.get('raw_data_path')
 output_path = general_config.get('output_path')
 r_path = general_config.get('R_path')
 os.environ["R_HOME"] = r_path
+from rpy2.robjects.packages import importr
+from rpy2.robjects import pandas2ri
+from rpy2.robjects import Formula
+from rpy2.robjects import r
+
 
 
 def main():
@@ -56,6 +63,117 @@ def main():
 
     # Process summary tasks from the loaded configuration
     process_data_summaries(df, data_summary_config)
+
+    # Activate pandas-to-R conversion
+    pandas2ri.activate()
+
+    # Import R libraries
+    base = importr('base')
+    stats = importr('stats')
+    lme4 = importr('lme4')
+    emmeans = importr('emmeans')
+    utils = importr('utils')
+
+    # Load the data into a pandas DataFrame
+    data2 = df
+
+    # Convert pandas DataFrame to R DataFrame
+    r_data2 = pandas2ri.py2rpy(data2)
+
+    # Fit the linear mixed-effects model using lmer
+    formula = Formula('UptakeASum_1hr ~ Genotype * one_hour + (1|Animal) + (1|StartDate)')
+    lmer_model = lme4.lmer(formula, data=r_data2, REML=False)
+
+    # Perform ANOVA
+    anova_results = stats.anova(lmer_model)
+    anova_df = pandas2ri.rpy2py(r['as.data.frame'](anova_results))
+    print("ANOVA Results:")
+    print(anova_results)
+
+    # Calculate Estimated Marginal Means (EMMs) with pairwise contrasts
+    formula = Formula("pairwise ~ Genotype:one_hour")
+    emmeans_results = emmeans.emmeans(lmer_model, specs=formula, adjust="fdr")
+    print('emmeans_results:')
+    print(emmeans_results)
+
+    # Extract emmeans dataframe for each combination of iteraction terms
+    intrxn_emmeans_r = emmeans_results.rx2('emmeans')
+    intrxn_emmeans_df = pandas2ri.rpy2py(r['as.data.frame'](intrxn_emmeans_r))
+
+    # Create a mapping of numeric levels to original one_hour labels
+    one_hour_mapping = dict(enumerate(data2["one_hour"].astype("category").cat.categories, start=1))
+
+    # Map numeric levels back to original one_hour labels
+    intrxn_emmeans_df["one_hour"] = intrxn_emmeans_df["one_hour"].map(one_hour_mapping)
+    print("Interaction Emmeans DataFrame:")
+    print(intrxn_emmeans_df)
+
+    # Create a mapping of numeric levels to original Genotype labels
+    genotype_mapping = dict(enumerate(data2["Genotype"].astype("category").cat.categories, start=1))
+
+    # Map numeric levels back to original Genotype labels
+    intrxn_emmeans_df["Genotype"] = intrxn_emmeans_df["Genotype"].map(genotype_mapping)
+
+    # Extract pairwise contrasts
+    contrasts_r = emmeans_results.rx2('contrasts')
+    contrasts_df = pandas2ri.rpy2py(r['as.data.frame'](contrasts_r))
+    print("Pairwise Contrasts DataFrame:")
+    print(contrasts_df)
+
+    # Sort lsmeans by one_hour and Genotype
+    intrxn_emmeans_df["one_hour_num"] = intrxn_emmeans_df["one_hour"].str.extract(r'(\d+)').astype(int)
+    intrxn_emmeans_df = intrxn_emmeans_df.sort_values(by=["one_hour_num", "Genotype"])
+
+    # TODO: Generalize the zt column creation based on the number of unique Genotypes (?) and desired time intervals
+    # num_zt = len(intrxn_emmeans_df["Genotype"].unique())
+
+    # Add a zt column for plotting
+    #intrxn_emmeans_df = intrxn_emmeans_df[intrxn_emmeans_df["one_hour"] != 25] # TODO: for testing only
+    intrxn_emmeans_df["zt"] = [
+        1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10,
+        11, 11, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17, 17, 18, 18,
+        19, 19, 20, 20, 21, 21, 22, 22, 23, 23, 24, 24
+    ]
+
+    # Append anova_results and contrasts_df to the same CSV file
+    output_file = "./output/202305_DATBFX_Females_Sable_RC_AL_LD_Food_Intake_contrasts_1hr.csv"
+    anova_df.to_csv(output_file, index=False)  
+    with open(output_file, 'a') as f:
+        f.write("\nPairwise Contrasts\n")
+        contrasts_df.to_csv(f, index=False)
+
+    # Plot the results using Python
+    plt.figure(figsize=(7, 5))
+    sns.lineplot(
+        data=intrxn_emmeans_df,
+        x="zt",
+        y="emmean",
+        hue="Genotype",
+        style="Genotype",
+        markers=True,
+        dashes=True,
+        ci=None
+    )
+
+    # Add error bars
+    for genotype in intrxn_emmeans_df["Genotype"].unique():
+        subset = intrxn_emmeans_df[intrxn_emmeans_df["Genotype"] == genotype]
+        plt.errorbar(
+            subset["zt"],
+            subset["emmean"],
+            yerr=subset["SE"],
+            fmt='none',
+            capsize=3,
+            label=None
+        )
+
+    plt.title("Food Intake (1hr)")
+    plt.xlabel("ZT")
+    plt.ylabel("Estimated Marginal Means")
+    plt.legend(title="Genotype")
+    plt.tight_layout()
+    plt.savefig("./output/202305_DATBFX_Females_Sable_RC_AL_FoodIntake_1hr_Line_Plot.pdf")
+    plt.show()
 
 
 if __name__ == "__main__":
