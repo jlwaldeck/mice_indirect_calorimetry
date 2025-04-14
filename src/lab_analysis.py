@@ -44,7 +44,7 @@ def plot_food_intake(data, output_file, title):
         title (str): Title of the plot.
     """
     # Set Seaborn style
-    sns.set(style="whitegrid")
+    sns.set_theme(style="whitegrid")
 
     # Create the plot
     plt.figure(figsize=(7, 5))
@@ -56,7 +56,7 @@ def plot_food_intake(data, output_file, title):
         style="Genotype",  # Line style by Genotype
         markers=True,
         dashes=True,
-        ci=None  # Disable Seaborn's built-in CI
+        errorbar=None  # Disable Seaborn's built-in CI
     )
 
     # Add error bars manually
@@ -99,7 +99,6 @@ def main():
 
     # Call the data_summary function
     summary = data_summary(df, varname='UptakeA_Sum', groupnames=['Cycle', 'Genotype'])
-    print(summary.iloc[0:50])
 
     # Call the plot_food_intake function
     plot_food_intake(
