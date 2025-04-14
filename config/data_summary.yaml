@@ -1,0 +1,16 @@
+data_summaries:
+  - varname: "UptakeA_Sum"
+    groupnames: ["Cycle", "Genotype"]
+    x_var: "Cycle"
+    y_var: "UptakeA_Sum"
+    group: "Genotype"
+    output_file: "./output/202305_DATBFX_Females_LD_Sable_RC_AL_FoodIntake_30mins_Line_Plot.pdf"
+    title: "Food Intake (30 mins)"
+
+  - varname: "AllMeters"
+    groupnames: ["Cycle", "Genotype"]
+    x_var: "Cycle"
+    y_var: "AllMeters"
+    group: "Genotype"
+    output_file: "./output/202305_DATBFX_Females_LD_Sable_RC_AL_Activity_30mins_Line_Plot.pdf"
+    title: "Activity (30 mins)"
