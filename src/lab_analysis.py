@@ -33,9 +33,11 @@ with open(data_summary_config_path, 'r') as file:
     config = yaml.safe_load(file)
 data_summary_config = config.get('data_summaries', [])
 
-# Retrieve the raw_data_path from the general configuration
+# Retrieve the relevant file paths from the general configuration
 raw_data_path = general_config.get('raw_data_path')
 output_path = general_config.get('output_path')
+r_path = general_config.get('R_path')
+os.environ["R_HOME"] = r_path
 
 
 def main():
