@@ -46,7 +46,7 @@ def apply_mapping(df, column_config):
 
     source_column = column_config.get('source')
     target_column = column_config.get('target')
-    mapping = column_config.get('mapping', {})
+    mapping = column_config.get('mapping', [])
     default_value = column_config.get('default', None)
     dtype = column_config.get('dtype', None)  # Get the desired data type
 
@@ -60,8 +60,20 @@ def apply_mapping(df, column_config):
     if dtype:
         df.loc[:, source_column] = df[source_column].astype(dtype)
 
-    # Create the new column based on the mapping with the default value
-    df.loc[:, target_column] = df[source_column].map(mapping).fillna(default_value)
+    # Check if the mapping is interval-based (contains 'min' keys)
+    if isinstance(mapping, list) and all('min' in m for m in mapping):
+        # Define a function to map intervals
+        def map_intervals(value):
+            for interval in mapping:
+                if value >= interval['min']:
+                    return interval['label']
+            return default_value
+
+        # Apply the interval mapping
+        df[target_column] = df[source_column].apply(map_intervals)
+    else:
+        # Apply direct mapping (key-value pairs)
+        df[target_column] = df[source_column].map(mapping).fillna(default_value)
 
     return df
 

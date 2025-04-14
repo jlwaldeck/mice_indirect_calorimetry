@@ -20,72 +20,120 @@ column_value_mappings:
       15: "BKO"
       16: "Ctrl"
     default: "Low"
-    dtype: int    
+    dtype: int
+
   four_hours:
     source: "Cycle"
     target: "four_hours"
     mapping:
-      40: "ZT20_ZT24"
-      32: "ZT16_ZT20"
-      24: "ZT12_ZT16"
-      16: "ZT8_ZT12"
-      8: "ZT4_ZT8"
-      1: "ZT0_ZT4"
+      - min: 40
+        label: "ZT20_ZT24"
+      - min: 32
+        label: "ZT16_ZT20"
+      - min: 24
+        label: "ZT12_ZT16"
+      - min: 16
+        label: "ZT8_ZT12"
+      - min: 8
+        label: "ZT4_ZT8"
+      - min: 1
+        label: "ZT0_ZT4"
     default: "Low"
     dtype: int
+
   two_hours:
     source: "Cycle"
     target: "two_hours"
     mapping:
-      44: "ZT22_ZT24"
-      40: "ZT20_ZT22"
-      36: "ZT18_ZT20"
-      32: "ZT16_ZT18"
-      28: "ZT14_ZT16"
-      24: "ZT12_ZT14"
-      20: "ZT10_ZT12"
-      16: "ZT8_ZT10"
-      12: "ZT6_ZT8"
-      8: "ZT4_ZT6"
-      4: "ZT2_ZT4"
-      1: "ZT0_ZT2"
+      - min: 44
+        label: "ZT22_ZT24"
+      - min: 40
+        label: "ZT20_ZT22"
+      - min: 36
+        label: "ZT18_ZT20"
+      - min: 32
+        label: "ZT16_ZT18"
+      - min: 28
+        label: "ZT14_ZT16"
+      - min: 24
+        label: "ZT12_ZT14"
+      - min: 20
+        label: "ZT10_ZT12"
+      - min: 16
+        label: "ZT8_ZT10"
+      - min: 12
+        label: "ZT6_ZT8"
+      - min: 8
+        label: "ZT4_ZT6"
+      - min: 4
+        label: "ZT2_ZT4"
+      - min: 1
+        label: "ZT0_ZT2"
     default: "Low"
     dtype: int
+
   one_hour:
     source: "Cycle"
     target: "one_hour"
     mapping:
-      47: "ZT23"
-      45: "ZT22"
-      43: "ZT21"
-      41: "ZT20"
-      39: "ZT19"
-      37: "ZT18"
-      35: "ZT17"
-      33: "ZT16"
-      31: "ZT15"
-      29: "ZT14"
-      27: "ZT13"
-      25: "ZT12"
-      23: "ZT11"
-      21: "ZT10"
-      19: "ZT9"
-      17: "ZT8"
-      15: "ZT7"
-      13: "ZT6"
-      11: "ZT5"
-      9: "ZT4"
-      7: "ZT3"
-      5: "ZT2"
-      3: "ZT1"
-      1: "ZT0"
+      - min: 47
+        label: "ZT23"
+      - min: 45
+        label: "ZT22"
+      - min: 43
+        label: "ZT21"
+      - min: 41
+        label: "ZT20"
+      - min: 39
+        label: "ZT19"
+      - min: 37
+        label: "ZT18"
+      - min: 35
+        label: "ZT17"
+      - min: 33
+        label: "ZT16"
+      - min: 31
+        label: "ZT15"
+      - min: 29
+        label: "ZT14"
+      - min: 27
+        label: "ZT13"
+      - min: 25
+        label: "ZT12"
+      - min: 23
+        label: "ZT11"
+      - min: 21
+        label: "ZT10"
+      - min: 19
+        label: "ZT9"
+      - min: 17
+        label: "ZT8"
+      - min: 15
+        label: "ZT7"
+      - min: 13
+        label: "ZT6"
+      - min: 11
+        label: "ZT5"
+      - min: 9
+        label: "ZT4"
+      - min: 7
+        label: "ZT3"
+      - min: 5
+        label: "ZT2"
+      - min: 3
+        label: "ZT1"
+      - min: 1
+        label: "ZT0"
     default: "Low"
     dtype: int
+
   day_night:
     source: "Cycle"
     target: "day_night"
     mapping:
-      25: "Dark"
-      1: "Light"
+      - min: 25
+        label: "Dark"
+      - min: 1
+        label: "Light"
     default: "Low"
     dtype: int
