@@ -69,11 +69,9 @@ def main():
     pandas2ri.activate()
 
     # Import R libraries
-    base = importr('base')
     stats = importr('stats')
     lme4 = importr('lme4')
     emmeans = importr('emmeans')
-    utils = importr('utils')
 
     # Load the data into a pandas DataFrame
     data2 = df
@@ -106,9 +104,6 @@ def main():
 
     # Map numeric levels back to original one_hour labels
     intrxn_emmeans_df["one_hour"] = intrxn_emmeans_df["one_hour"].map(one_hour_mapping)
-    print("Interaction Emmeans DataFrame:")
-    print(intrxn_emmeans_df)
-
     # Create a mapping of numeric levels to original Genotype labels
     genotype_mapping = dict(enumerate(data2["Genotype"].astype("category").cat.categories, start=1))
 
@@ -132,9 +127,9 @@ def main():
     group_variable="Genotype"
     )
 
-    # Append anova_results and contrasts_df to the same CSV file
+    # Write anova_results and contrasts_df to the same CSV file
     output_file = "./output/202305_DATBFX_Females_Sable_RC_AL_LD_Food_Intake_contrasts_1hr.csv"
-    anova_df.to_csv(output_file, index=False)  
+    anova_df.to_csv(output_file, index=False)
     with open(output_file, 'a') as f:
         f.write("\nPairwise Contrasts\n")
         contrasts_df.to_csv(f, index=False)
