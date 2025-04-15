@@ -1,0 +1,21 @@
+anova_contrast:
+  FoodIntake_1hr:
+    lmer_formula: "UptakeASum_1hr ~ Genotype * one_hour + (1|Animal) + (1|StartDate)"
+    emm_formula: "pairwise ~ Genotype:one_hour"
+    adjust_method: "fdr"
+    columns_to_map: ["one_hour", "Genotype"]
+    time_variable: "one_hour"
+    group_variable: "Genotype"
+    output_file: "./output/202305_DATBFX_Females_Sable_RC_AL_LD_Food_Intake_contrasts_1hr.csv"
+    plot_output_file: "./output/202305_DATBFX_Females_Sable_RC_AL_FoodIntake_1hr_Line_Plot.pdf"
+    plot_title: "Food Intake (1hr)"
+  FoodIntake_2hr:
+    lmer_formula: "UptakeASum_2hrs ~ Genotype * two_hours + (1|Animal) + (1|StartDate)"
+    emm_formula: "pairwise ~ Genotype:two_hours"
+    adjust_method: "fdr"
+    columns_to_map: ["two_hours", "Genotype"]
+    time_variable: "two_hours"
+    group_variable: "Genotype"
+    output_file: "./output/202305_DATBFX_Females_Sable_RC_AL_LD_Food_Intake_contrasts_2hr.csv"
+    plot_output_file: "./output/202305_DATBFX_Females_Sable_RC_AL_FoodIntake_2hr_Line_Plot.pdf"
+    plot_title: "Food Intake (2hr)"

@@ -2,9 +2,7 @@ import os
 import pandas as pd
 import yaml
 from data_processing import load_data, transform_via_map, apply_grouping_operations, apply_filters
-from stats_functions import process_data_summaries, generate_zt_column, map_numeric_to_original_labels
-import matplotlib.pyplot as plt
-import seaborn as sns
+from stats_functions import process_data_summaries, process_anova_and_plot
 
 # Dynamically determine the path to this script
 script_dir = os.path.dirname(__file__)
@@ -13,6 +11,7 @@ gen_config_file_path = os.path.join(script_dir, '../config/general_config.yaml')
 col_value_map_file_path = os.path.join(script_dir, '../config/column_mapping.yaml')
 col_group_agg_file_path = os.path.join(script_dir, '../config/group_aggregation.yaml')
 data_summary_config_path = os.path.join(script_dir, '../config/data_summary.yaml')
+anova_contrast_config_path = os.path.join(script_dir, '../config/anova_contrast_config.yaml')
 
 # Load the column mapping configuration from YAML
 with open(col_value_map_file_path, 'r') as file:
@@ -35,20 +34,15 @@ with open(data_summary_config_path, 'r') as file:
     config = yaml.safe_load(file)
 data_summary_config = config.get('data_summaries', [])
 
-# Retrieve the relevant file paths from the general configuration
-raw_data_path = general_config.get('raw_data_path')
-output_path = general_config.get('output_path')
-r_path = general_config.get('R_path')
-os.environ["R_HOME"] = r_path
-from rpy2.robjects.packages import importr
-from rpy2.robjects import pandas2ri
-from rpy2.robjects import Formula
-from rpy2.robjects import r
-
+# Load the anova_contrast_config.yaml configuration
+with open(anova_contrast_config_path, "r") as file:
+    config = yaml.safe_load(file)
+anova_contrast_config = config.get('anova_contrast', [])
 
 
 def main():
-
+    # Load the raw data
+    raw_data_path = general_config.get('raw_data_path')
     raw_data = load_data(raw_data_path)  # Load the raw data using path in general_config
     df = apply_filters(raw_data, data_filters)  # Apply filters listed in general_config
     df = transform_via_map(df, column_mappings)  # Apply mappings listed in column_mapping config
@@ -64,103 +58,8 @@ def main():
     # Process summary tasks from the loaded configuration
     process_data_summaries(df, data_summary_config)
 
-    # Activate pandas-to-R conversion
-    pandas2ri.activate()
-
-    # Import R libraries
-    stats = importr('stats')
-    lme4 = importr('lme4')
-    emmeans = importr('emmeans')
-
-    # Convert pandas DataFrame to R DataFrame
-    r_df = pandas2ri.py2rpy(df)
-
-    # Fit the linear mixed-effects model using lmer
-    lmer_formula = Formula('UptakeASum_1hr ~ Genotype * one_hour + (1|Animal) + (1|StartDate)')
-    lmer_model = lme4.lmer(lmer_formula, data=r_df, REML=False)
-
-    # Perform ANOVA
-    anova_results = stats.anova(lmer_model)
-    anova_df = pandas2ri.rpy2py(r['as.data.frame'](anova_results))
-    print("ANOVA Results:")
-    print(anova_results)
-
-    # Calculate Estimated Marginal Means (EMMs) with pairwise contrasts
-    emm_formula = Formula("pairwise ~ Genotype:one_hour")
-    emmeans_results = emmeans.emmeans(lmer_model, specs=emm_formula, adjust="fdr")
-    print('emmeans_results:')
-    print(emmeans_results)
-
-    # Extract emmeans dataframe for each combination of iteraction terms
-    intrxn_emmeans_r = emmeans_results.rx2('emmeans')
-    intrxn_emmeans_df = pandas2ri.rpy2py(r['as.data.frame'](intrxn_emmeans_r))
-
-    # Specify the columns to map
-    # TODO: Update this to use config
-    columns_to_map = ["one_hour", "Genotype"]
-
-    # Map numeric levels back to original labels
-    intrxn_emmeans_df = map_numeric_to_original_labels(
-        df=intrxn_emmeans_df,
-        mapping_df=df,
-        columns=columns_to_map)
-
-    # Extract pairwise contrasts
-    contrasts_r = emmeans_results.rx2('contrasts')
-    contrasts_df = pandas2ri.rpy2py(r['as.data.frame'](contrasts_r))
-    print("Pairwise Contrasts DataFrame:")
-    print(contrasts_df)
-
-    # Sort interaction emmeans df by numeric form of one_hour and Genotype
-    # Note: Assumes values in x_hour column are in some alpha numeric form (e.g. ZT01)
-    # Necessary to ensure the x-axis is in correct order for plotting
-    intrxn_emmeans_df["one_hour_num"] = intrxn_emmeans_df["one_hour"].str.extract(r'(\d+)').astype(int)
-    intrxn_emmeans_df = intrxn_emmeans_df.sort_values(by=["one_hour_num", "Genotype"])
-    intrxn_emmeans_df["zt"] = generate_zt_column(
-    df=intrxn_emmeans_df,
-    time_variable="one_hour",
-    group_variable="Genotype"
-    )
-
-    # Write anova_results and contrasts_df to the same CSV file
-    output_file = "./output/202305_DATBFX_Females_Sable_RC_AL_LD_Food_Intake_contrasts_1hr.csv"
-    anova_df.to_csv(output_file, index=False)
-    with open(output_file, 'a') as f:
-        f.write("\nPairwise Contrasts\n")
-        contrasts_df.to_csv(f, index=False)
-
-    # Plot the results using Python
-    plt.figure(figsize=(7, 5))
-    sns.lineplot(
-        data=intrxn_emmeans_df,
-        x="zt",
-        y="emmean",
-        hue="Genotype",
-        style="Genotype",
-        markers=True,
-        dashes=True,
-        ci=None
-    )
-
-    # Add error bars
-    for var in intrxn_emmeans_df["Genotype"].unique():
-        subset = intrxn_emmeans_df[intrxn_emmeans_df["Genotype"] == var]
-        plt.errorbar(
-            subset["zt"],
-            subset["emmean"],
-            yerr=subset["SE"],
-            fmt='none',
-            capsize=3,
-            label=None
-        )
-
-    plt.title("Food Intake (1hr)")
-    plt.xlabel("ZT")
-    plt.ylabel("Estimated Marginal Means")
-    plt.legend(title="Genotype")
-    plt.tight_layout()
-    plt.savefig("./output/202305_DATBFX_Females_Sable_RC_AL_FoodIntake_1hr_Line_Plot.pdf")
-    plt.show()
+    # Build lmer, calculate ANOVA, EMM and pairwise contrasts, plot results
+    process_anova_and_plot(df, anova_contrast_config)
 
 
 if __name__ == "__main__":

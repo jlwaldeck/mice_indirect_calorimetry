@@ -506,6 +506,7 @@ Food_Intake_emmeans_2hrs <- emmeans(FoodIntake_2hrs, list(pairwise ~ Genotype:tw
 Food_Intake_lsmeans_2hrs <- Food_Intake_emmeans_2hrs$`emmeans of Genotype, two_hours`
 
 Food_Intake_lsmeans_2hrs <- as.data.frame(Food_Intake_lsmeans_2hrs)
+write.table(Food_Intake_lsmeans_2hrs, file = "./output/emms_master_output.csv", sep = ",", row.names = FALSE)
 
 Food_Intake_contrasts_2hrs <- as.data.frame(Food_Intake_emmeans_2hrs$`pairwise differences of Genotype, two_hours`)
 

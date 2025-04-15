@@ -1,6 +1,32 @@
+import os
+import yaml
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+# Load the general configuration from YAML
+script_dir = os.path.dirname(__file__)
+gen_config_file_path = os.path.join(script_dir, '../config/general_config.yaml')
+with open(gen_config_file_path, 'r') as file:
+    config = yaml.safe_load(file)
+general_config = config.get('general_settings')
+
+r_path = general_config.get('R_path')
+os.environ["R_HOME"] = r_path
+# TODO: Do I need to clear the R global variables here?
+
+
+
+from rpy2.robjects import pandas2ri, Formula, r
+from rpy2.robjects.packages import importr
+
+pandas2ri.activate()
+
+# Import R libraries
+stats = importr('stats')
+lme4 = importr('lme4')
+emmeans = importr('emmeans')
 
 def se(x):
     """
@@ -170,3 +196,169 @@ def map_numeric_to_original_labels(df, mapping_df, columns):
         # Map numeric levels back to original labels
         df[column] = df[column].map(mapping)
     return df
+
+
+def fit_lmer_model(df, formula):
+    """
+    Fit a linear mixed-effects model using lmer.
+    """
+    r_df = pandas2ri.py2rpy(df)
+    lmer_formula = Formula(formula)
+    lmer_model = lme4.lmer(lmer_formula, data=r_df, REML=False)
+    return lmer_model
+
+def perform_anova(lmer_model):
+    """
+    Perform ANOVA on the fitted lmer model.
+    """
+    anova_results = stats.anova(lmer_model)
+    anova_df = pandas2ri.rpy2py(r['as.data.frame'](anova_results))
+    return anova_df
+
+def calculate_emmeans(lmer_model, formula, adjust_method):
+    """
+    Calculate Estimated Marginal Means (EMMs) with pairwise contrasts.
+    """
+    # Set emm_options to disable sorting
+    r('emmeans::emm_options(sort = FALSE)')
+    
+    emm_formula = Formula(formula)
+    emmeans_results = emmeans.emmeans(lmer_model, specs=emm_formula, adjust=adjust_method)
+    intrxn_emmeans_r = emmeans_results.rx2('emmeans')
+    print(intrxn_emmeans_r)
+    intrxn_emmeans_r_df = r['as.data.frame'](intrxn_emmeans_r)
+    
+    print(intrxn_emmeans_r_df)
+    intrxn_emmeans_df = pandas2ri.rpy2py(intrxn_emmeans_r_df)
+    print(intrxn_emmeans_df)
+    intrxn_emmeans_df.to_csv("./output/emms_test_output.csv")
+    contrasts_r = emmeans_results.rx2('contrasts')
+    contrasts_df = pandas2ri.rpy2py(r['as.data.frame'](contrasts_r))
+    return intrxn_emmeans_df, contrasts_df
+
+
+def sort_and_generate_zt_column(df, time_variable, group_variable):
+    """
+    Sort the DataFrame and generate the 'zt' column using the existing generate_zt_column function.
+    Handles ranges in the time variable (e.g., "ZT0_ZT2", "ZT2_ZT4").
+
+    Args:
+        df (pd.DataFrame): The DataFrame to process.
+        time_variable (str): The column representing the time variable (e.g., 'one_hour').
+        group_variable (str): The column representing the grouping variable (e.g., 'Genotype').
+
+    Returns:
+        pd.DataFrame: The updated DataFrame with sorted values and a 'zt' column.
+    """
+    # Extract the start and end of the range from the time variable
+    df["time_var_start"] = df[time_variable].str.extract(r'(\d+)_?')[0].astype(int)
+    df["time_var_end"] = df[time_variable].str.extract(r'_(\d+)$')[0].fillna(df["time_var_start"]).astype(int)
+
+    # Sort by the start of the range, then by the group variable
+    df = df.sort_values(by=["time_var_start", group_variable])
+
+    # Generate the 'zt' column using the existing function
+    df["zt"] = generate_zt_column(df, time_variable, group_variable)
+
+    # Drop temporary columns used for sorting
+    df = df.drop(columns=["time_var_start", "time_var_end"])
+
+    return df
+
+def write_results_to_csv(anova_df, contrasts_df, output_file):
+    """
+    Write ANOVA results and contrasts to a CSV file.
+    """
+    with open(output_file, 'w') as f:
+        f.write("ANOVA Results\n")
+        anova_df.to_csv(f, index=False)
+    with open(output_file, 'a') as f:
+        f.write("\nPairwise Contrasts\n")
+        contrasts_df.to_csv(f, index=False)
+
+def plot_results(df, output_file, title):
+    """
+    Plot the results using seaborn and matplotlib.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the data to plot.
+        output_file (str): The file path to save the plot.
+        title (str): The title of the plot.
+    """
+    plt.figure(figsize=(7, 5))
+    sns.lineplot(
+        data=df,
+        x="zt",
+        y="emmean",
+        hue="Genotype",
+        style="Genotype",
+        markers=True,
+        dashes=True,
+        ci=None
+    )
+    for var in df["Genotype"].unique():
+        subset = df[df["Genotype"] == var]
+        plt.errorbar(
+            subset["zt"],
+            subset["emmean"],
+            yerr=subset["SE"],
+            fmt='none',
+            capsize=3,
+            label=None
+        )
+    plt.title(title)
+    plt.xlabel("ZT")
+    plt.ylabel("Estimated Marginal Means")
+    plt.legend(title="Genotype")
+    plt.tight_layout()
+    plt.savefig(output_file)
+    plt.show()
+
+def process_anova_and_plot(df, anova_contrast_config):
+    """
+    Process multiple ANOVA and contrast sections, calculate contrasts, and plot results based on the configuration.
+
+    Args:
+        df (pd.DataFrame): The input DataFrame.
+        anova_contrast_config (dict): The configuration dictionary containing multiple sections for ANOVA and contrasts.
+    """
+    # Iterate over each section in the anova_contrast configuration
+    for section_name, config in anova_contrast_config.items():
+        print(f"Processing section: {section_name}")
+
+        # Fit the model
+        lmer_model = fit_lmer_model(df, config["lmer_formula"])
+
+        # Perform ANOVA
+        anova_df = perform_anova(lmer_model)
+
+        # Calculate EMMs and contrasts
+        intrxn_emmeans_df, contrasts_df = calculate_emmeans(
+            lmer_model,
+            formula=config["emm_formula"],
+            adjust_method=config["adjust_method"]
+        )
+
+        # Map numeric levels back to original labels
+        intrxn_emmeans_df = map_numeric_to_original_labels(
+            df=intrxn_emmeans_df,
+            mapping_df=df,
+            columns=config["columns_to_map"]
+        )
+
+        intrxn_emmeans_df.to_csv("./output/emms_test_post_map.csv")
+
+        # Sort and generate 'zt' column
+        intrxn_emmeans_df = sort_and_generate_zt_column(
+            df=intrxn_emmeans_df,
+            time_variable=config["time_variable"],
+            group_variable=config["group_variable"]
+        )
+
+        intrxn_emmeans_df.to_csv("./output/emms_test_post_sort.csv")
+
+        # Write results to CSV
+        write_results_to_csv(anova_df, contrasts_df, config["output_file"])
+
+        # Plot results with the specified title
+        plot_results(intrxn_emmeans_df, config["plot_output_file"], config["plot_title"])
