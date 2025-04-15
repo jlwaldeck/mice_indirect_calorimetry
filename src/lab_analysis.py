@@ -72,15 +72,12 @@ def main():
     lme4 = importr('lme4')
     emmeans = importr('emmeans')
 
-    # Load the data into a pandas DataFrame
-    data2 = df
-
     # Convert pandas DataFrame to R DataFrame
-    r_data2 = pandas2ri.py2rpy(data2)
+    r_df = pandas2ri.py2rpy(df)
 
     # Fit the linear mixed-effects model using lmer
-    formula = Formula('UptakeASum_1hr ~ Genotype * one_hour + (1|Animal) + (1|StartDate)')
-    lmer_model = lme4.lmer(formula, data=r_data2, REML=False)
+    lmer_formula = Formula('UptakeASum_1hr ~ Genotype * one_hour + (1|Animal) + (1|StartDate)')
+    lmer_model = lme4.lmer(lmer_formula, data=r_df, REML=False)
 
     # Perform ANOVA
     anova_results = stats.anova(lmer_model)
@@ -89,8 +86,8 @@ def main():
     print(anova_results)
 
     # Calculate Estimated Marginal Means (EMMs) with pairwise contrasts
-    formula = Formula("pairwise ~ Genotype:one_hour")
-    emmeans_results = emmeans.emmeans(lmer_model, specs=formula, adjust="fdr")
+    emm_formula = Formula("pairwise ~ Genotype:one_hour")
+    emmeans_results = emmeans.emmeans(lmer_model, specs=emm_formula, adjust="fdr")
     print('emmeans_results:')
     print(emmeans_results)
 
@@ -105,7 +102,7 @@ def main():
     # Map numeric levels back to original labels
     intrxn_emmeans_df = map_numeric_to_original_labels(
         df=intrxn_emmeans_df,
-        mapping_df=data2,
+        mapping_df=df,
         columns=columns_to_map)
 
     # Extract pairwise contrasts
@@ -146,8 +143,8 @@ def main():
     )
 
     # Add error bars
-    for genotype in intrxn_emmeans_df["Genotype"].unique():
-        subset = intrxn_emmeans_df[intrxn_emmeans_df["Genotype"] == genotype]
+    for var in intrxn_emmeans_df["Genotype"].unique():
+        subset = intrxn_emmeans_df[intrxn_emmeans_df["Genotype"] == var]
         plt.errorbar(
             subset["zt"],
             subset["emmean"],
