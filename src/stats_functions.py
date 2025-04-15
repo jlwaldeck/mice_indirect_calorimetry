@@ -151,3 +151,22 @@ def generate_zt_column(df, time_variable, group_variable):
 
     return zt_column
 
+
+def map_numeric_to_original_labels(df, mapping_df, columns):
+    """
+    Map numeric levels in a DataFrame back to their original categorical labels.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing numeric levels to be mapped.
+        mapping_df (pd.DataFrame): The DataFrame containing the original categorical columns.
+        columns (list): List of column names to map.
+
+    Returns:
+        pd.DataFrame: The updated DataFrame with mapped categorical labels.
+    """
+    for column in columns:
+        # Create a mapping of numeric levels to original labels
+        mapping = dict(enumerate(mapping_df[column].astype("category").cat.categories, start=1))
+        # Map numeric levels back to original labels
+        df[column] = df[column].map(mapping)
+    return df

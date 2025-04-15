@@ -2,8 +2,7 @@ import os
 import pandas as pd
 import yaml
 from data_processing import load_data, transform_via_map, apply_grouping_operations, apply_filters
-from stats_functions import process_data_summaries
-from stats_functions import process_data_summaries, generate_zt_column
+from stats_functions import process_data_summaries, generate_zt_column, map_numeric_to_original_labels
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -99,16 +98,15 @@ def main():
     intrxn_emmeans_r = emmeans_results.rx2('emmeans')
     intrxn_emmeans_df = pandas2ri.rpy2py(r['as.data.frame'](intrxn_emmeans_r))
 
-    # Create a mapping of numeric levels to original one_hour labels
-    one_hour_mapping = dict(enumerate(data2["one_hour"].astype("category").cat.categories, start=1))
+    # Specify the columns to map
+    # TODO: Update this to use config
+    columns_to_map = ["one_hour", "Genotype"]
 
-    # Map numeric levels back to original one_hour labels
-    intrxn_emmeans_df["one_hour"] = intrxn_emmeans_df["one_hour"].map(one_hour_mapping)
-    # Create a mapping of numeric levels to original Genotype labels
-    genotype_mapping = dict(enumerate(data2["Genotype"].astype("category").cat.categories, start=1))
-
-    # Map numeric levels back to original Genotype labels
-    intrxn_emmeans_df["Genotype"] = intrxn_emmeans_df["Genotype"].map(genotype_mapping)
+    # Map numeric levels back to original labels
+    intrxn_emmeans_df = map_numeric_to_original_labels(
+        df=intrxn_emmeans_df,
+        mapping_df=data2,
+        columns=columns_to_map)
 
     # Extract pairwise contrasts
     contrasts_r = emmeans_results.rx2('contrasts')
