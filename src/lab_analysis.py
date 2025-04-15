@@ -3,6 +3,7 @@ import pandas as pd
 import yaml
 from data_processing import load_data, transform_via_map, apply_grouping_operations, apply_filters
 from stats_functions import process_data_summaries
+from stats_functions import process_data_summaries, generate_zt_column
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -120,20 +121,16 @@ def main():
     print("Pairwise Contrasts DataFrame:")
     print(contrasts_df)
 
-    # Sort lsmeans by one_hour and Genotype
+    # Sort interaction emmeans df by numeric form of one_hour and Genotype
+    # Note: Assumes values in x_hour column are in some alpha numeric form (e.g. ZT01)
+    # Necessary to ensure the x-axis is in correct order for plotting
     intrxn_emmeans_df["one_hour_num"] = intrxn_emmeans_df["one_hour"].str.extract(r'(\d+)').astype(int)
     intrxn_emmeans_df = intrxn_emmeans_df.sort_values(by=["one_hour_num", "Genotype"])
-
-    # TODO: Generalize the zt column creation based on the number of unique Genotypes (?) and desired time intervals
-    # num_zt = len(intrxn_emmeans_df["Genotype"].unique())
-
-    # Add a zt column for plotting
-    #intrxn_emmeans_df = intrxn_emmeans_df[intrxn_emmeans_df["one_hour"] != 25] # TODO: for testing only
-    intrxn_emmeans_df["zt"] = [
-        1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10,
-        11, 11, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17, 17, 18, 18,
-        19, 19, 20, 20, 21, 21, 22, 22, 23, 23, 24, 24
-    ]
+    intrxn_emmeans_df["zt"] = generate_zt_column(
+    df=intrxn_emmeans_df,
+    time_variable="one_hour",
+    group_variable="Genotype"
+    )
 
     # Append anova_results and contrasts_df to the same CSV file
     output_file = "./output/202305_DATBFX_Females_Sable_RC_AL_LD_Food_Intake_contrasts_1hr.csv"

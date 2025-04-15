@@ -122,3 +122,32 @@ def process_data_summaries(df, data_summay_config):
             output_file=output_file,
             title=title
         )
+
+
+def generate_zt_column(df, time_variable, group_variable):
+    """
+    Generate the 'zt' column based on the time variable and group variable.
+
+    Args:
+        df (pd.DataFrame): The DataFrame to modify.
+        time_variable (str): The column representing the time variable (e.g., 'one_hour').
+        group_variable (str): The column representing the grouping variable (e.g., 'Genotype').
+
+    Returns:
+        list: A list of values for the 'zt' column.
+    """
+    # Determine the range of time values (e.g., 1 through 24 for a 24-hour day)
+    time_range = range(1, len(df[time_variable].unique()) + 1)
+
+    # Determine the number of unique groups (e.g., number of unique Genotypes)
+    num_groups = len(df[group_variable].unique())
+
+    # Repeat each time value for the number of unique groups
+    zt_column = [zt for zt in time_range for _ in range(num_groups)]
+
+    # Ensure the length matches the DataFrame
+    if len(zt_column) != len(df):
+        raise ValueError("Generated 'zt' column length does not match the DataFrame length.")
+
+    return zt_column
+
