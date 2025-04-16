@@ -58,7 +58,7 @@ data_summary <- function(data, varname, groupnames){
 # setwd("~/Desktop/OneDrive - Northwestern University/202305_Sable_DATBFX_Females_n16_AL_RC/")
 # data <- read.csv("./202305_DATBFX_Females_RC_AL_Sable_n16.csv")
 
-data <- read.csv("C:/Users/nwald/OneDrive/Desktop/202305_Sable_DATBFX_Females_n16_AL_RC/202305_DATBFX_Females_RC_AL_Sable_n16.csv")
+data <- read.csv("C:/src/mice_indirect_calorimetry/data/202305_DATBFX_Females_RC_AL_Sable_n16.csv")
 
 data <-
   data %>%
@@ -2170,7 +2170,7 @@ Tot_EE_lsmeans_Daily <- Tot_EE_lsmeans_Daily[with(Tot_EE_lsmeans_Daily, order(Ge
 write.table(Tot_EE_contrasts_Daily, file = "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Tot_EE_contrasts_Daily.csv")
 ###  FDR-adjusted comparisons
 
-pdf(file = "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Average_Energy_Expenditure.pdf", height = 4, width = 6)
+pdf(file = "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Total_Energy_Expenditure.pdf", height = 4, width = 6)
 
 predicted_values_Tot_EE_Daily <- data2 %>% 
 
