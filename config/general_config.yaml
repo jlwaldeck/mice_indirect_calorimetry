@@ -1,5 +1,5 @@
 general_settings:
-  raw_data_path: "C:/Users/nwald/OneDrive/Desktop/202305_Sable_DATBFX_Females_n16_AL_RC/202305_DATBFX_Females_RC_AL_Sable_n16.csv"
+  raw_data_path: "./data/202305_DATBFX_Females_RC_AL_Sable_n16.csv"
   output_path: "C:/src/mice_indirect_calorimetry/output"
   R_path: "C:/Program Files/R/R-4.4.1"
 
