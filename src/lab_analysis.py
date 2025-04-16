@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import yaml
 from data_processing import load_data, transform_via_map, apply_grouping_operations, apply_filters
-from stats_functions import process_data_summaries, process_anova_and_plot
+from stats_functions import process_data_summaries, analyze_and_plot
 
 # Dynamically determine the path to this script
 script_dir = os.path.dirname(__file__)
@@ -41,12 +41,21 @@ anova_contrast_config = config.get('anova_contrast', [])
 
 
 def main():
+
     # Load the raw data
     raw_data_path = general_config.get('raw_data_path')
-    raw_data = load_data(raw_data_path)  # Load the raw data using path in general_config
-    df = apply_filters(raw_data, data_filters)  # Apply filters listed in general_config
-    df = transform_via_map(df, column_mappings)  # Apply mappings listed in column_mapping config
-    df = apply_grouping_operations(df, grouping_config)  # Apply grouping and aggregation operations listed in group_aggregation config
+
+    # Load the raw data using path in general_config
+    raw_data = load_data(raw_data_path)
+
+    # Apply filters listed in general_config
+    df = apply_filters(raw_data, data_filters)
+
+    # Apply mappings listed in column_mapping config
+    df = transform_via_map(df, column_mappings)
+    
+    # Apply grouping and aggregation operations listed in group_aggregation config
+    df = apply_grouping_operations(df, grouping_config)
 
     # TODO: Replace with logger statements and/or error handling
     if df is not None:
@@ -59,8 +68,9 @@ def main():
     process_data_summaries(df, data_summary_config)
 
     # Build lmer, calculate ANOVA, EMM and pairwise contrasts, plot results
-    process_anova_and_plot(df, anova_contrast_config)
+    analyze_and_plot(df, anova_contrast_config)
 
 
 if __name__ == "__main__":
     main()
+    

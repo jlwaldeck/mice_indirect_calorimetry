@@ -12,21 +12,23 @@ with open(gen_config_file_path, 'r') as file:
     config = yaml.safe_load(file)
 general_config = config.get('general_settings')
 
+# Set R_HOME to enable interaction with R in Python
 r_path = general_config.get('R_path')
 os.environ["R_HOME"] = r_path
-# TODO: Do I need to clear the R global variables here?
+# TODO: Perform equivalent of rm(list = ls()) here?
 
-
-
+# Import R libraries using rpy2
 from rpy2.robjects import pandas2ri, Formula, r
 from rpy2.robjects.packages import importr
 
+# Enable automatic conversion between R objects and Python objects
 pandas2ri.activate()
 
 # Import R libraries
 stats = importr('stats')
 lme4 = importr('lme4')
 emmeans = importr('emmeans')
+
 
 def se(x):
     """
@@ -38,6 +40,7 @@ def se(x):
     """
     x = np.array(x)
     x = x[~np.isnan(x)]  # Exclude NaN values
+
     return np.std(x, ddof=1) / np.sqrt(len(x))
 
 
@@ -77,7 +80,7 @@ def data_summary_line_plot(data, x_var, y_var, group, output_file, title):
         output_file (str): Path to save the plot as a PDF.
         title (str): Title of the plot.
     """
-    # Set Seaborn theme
+    # Set seaborn theme
     sns.set_theme(style="whitegrid")
 
     # Create the plot
@@ -125,7 +128,7 @@ def process_data_summaries(df, data_summay_config):
         df (pd.DataFrame): The transformed DataFrame to process.
         data_summay_config (list): List of summary tasks from the configuration.
     """
-    # Iterate over the tasks in the configuration
+    # Iterate over the tasks specified in user config
     for summary in data_summay_config:
         # Extract task parameters
         varname = summary['varname']
@@ -154,13 +157,48 @@ def generate_zt_column(df, time_variable, group_variable):
     """
     Generate the 'zt' column based on the time variable and group variable.
 
+    The 'zt' column is a numeric representation of time intervals (e.g., ZT0, ZT2, ZT4) 
+    that is required for consistent plotting of time-series data. This column ensures 
+    that the data is properly aligned and grouped by both time and the specified grouping 
+    variable (e.g., 'Genotype') when creating line plots or other visualizations.
+
     Args:
         df (pd.DataFrame): The DataFrame to modify.
-        time_variable (str): The column representing the time variable (e.g., 'one_hour').
+        time_variable (str): The column representing the time variable (e.g., 'one_hour' or 'ZT0_ZT2').
+                             This column should contain unique time intervals or ranges.
         group_variable (str): The column representing the grouping variable (e.g., 'Genotype').
+                              This column is used to group the data for each time interval.
 
     Returns:
-        list: A list of values for the 'zt' column.
+        list: A list of numeric values for the 'zt' column, where each unique time interval 
+              is repeated for each unique group in the grouping variable.
+
+    Raises:
+        ValueError: If the generated 'zt' column length does not match the length of the DataFrame.
+
+    Why the 'zt' Column is Needed:
+        - Time-series plots often require a numeric representation of time intervals to ensure 
+          proper alignment on the x-axis.
+        - The 'zt' column provides a consistent numeric mapping for time intervals, even if the 
+          original time variable contains non-numeric labels (e.g., 'ZT0', 'ZT2').
+        - By repeating each time interval for all unique groups, the 'zt' column ensures that 
+          the data is structured correctly for grouped plotting (e.g., plotting separate lines 
+          for each 'Genotype' over time).
+
+    Example:
+        Suppose the DataFrame contains the following columns:
+            time_variable: ['ZT0', 'ZT2', 'ZT4']
+            group_variable: ['A', 'B']
+        The generated 'zt' column will look like:
+            [1, 1, 2, 2, 3, 3]
+        This ensures that each time interval ('ZT0', 'ZT2', 'ZT4') is repeated for each group ('A', 'B').
+
+    Workflow:
+        1. Determine the range of unique time intervals in the time variable.
+        2. Determine the number of unique groups in the grouping variable.
+        3. Generate a numeric sequence for the time intervals, repeated for each group.
+        4. Validate that the generated 'zt' column matches the length of the DataFrame.
+
     """
     # Determine the range of time values (e.g., 1 through 24 for a 24-hour day)
     time_range = range(1, len(df[time_variable].unique()) + 1)
@@ -202,38 +240,131 @@ def fit_lmer_model(df, formula):
     """
     Fit a linear mixed-effects model using lmer.
     """
+    # Convert the input pandas DataFrame to an R dataframe
     r_df = pandas2ri.py2rpy(df)
+
+    # Define the formula for the lmer model
     lmer_formula = Formula(formula)
+
+    # Fit the lmer model, using REML = False for maximum likelihood estimation
+    # TODO: Add REML as a parameter to the function, configure it via YAML
     lmer_model = lme4.lmer(lmer_formula, data=r_df, REML=False)
+
     return lmer_model
 
-def perform_anova(lmer_model):
+def calculate_anova(lmer_model):
     """
-    Perform ANOVA on the fitted lmer model.
+    Calculate ANOVA on the fitted lmer model.
+    Stores the results in a pandas DataFrame.
     """
     anova_results = stats.anova(lmer_model)
     anova_df = pandas2ri.rpy2py(r['as.data.frame'](anova_results))
+
     return anova_df
+
+
+def get_categorical_columns_and_levels(r_df):
+    """
+    Identify categorical columns in an R dataframe and retrieve their levels.
+
+    Args:
+        r_df: The R dataframe.
+
+    Returns:
+        tuple: A tuple containing:
+            - A list of unique categorical column names as Python strings.
+            - A dictionary mapping each categorical column to its levels.
+    """
+    # Identify all categorical (factor) columns in the R dataframe
+    categorical_columns = list(r['names'](r_df)[r['sapply'](r_df, r['is.factor'])])
+
+    # Convert column names to native Python strings and remove duplicates
+    categorical_columns = list(set([str(col) for col in categorical_columns]))
+
+    # Create a dictionary to store the levels for each categorical column
+    column_levels = {col: list(r['levels'](r_df.rx2(col))) for col in categorical_columns}
+
+    return categorical_columns, column_levels
+
+
+def map_numeric_levels_to_labels(df, categorical_columns, column_levels):
+    """
+    Map numeric levels in a DataFrame back to their original categorical labels.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing numeric levels to be mapped.
+        categorical_columns (list): List of categorical column names.
+        column_levels (dict): Dictionary mapping each categorical column to its levels.
+
+    Returns:
+        pd.DataFrame: The updated DataFrame with mapped categorical labels.
+    """
+    for col in categorical_columns:
+        df[col] = df[col].map(
+            lambda x: column_levels[col][int(x) - 1] if isinstance(x, (int, np.integer)) else column_levels[col][column_levels[col].index(x)]
+        )
+    return df
+
 
 def calculate_emmeans(lmer_model, formula, adjust_method):
     """
-    Calculate Estimated Marginal Means (EMMs) with pairwise contrasts.
+    Calculate Estimated Marginal Means (EMMs) and pairwise contrasts from a linear mixed-effects model.
+
+    This function computes the Estimated Marginal Means (EMMs) for a given linear mixed-effects model 
+    using the specified formula and adjustment method. It also calculates pairwise contrasts for the EMMs 
+    and returns both the EMMs and contrasts as pandas DataFrames.
+
+    Args:
+        lmer_model (rpy2.robjects.methods.RS4): The fitted linear mixed-effects model (from lme4::lmer in R).
+        formula (str): The formula specifying the terms for which EMMs should be calculated (e.g., "Genotype").
+        adjust_method (str): The method for p-value adjustment in pairwise contrasts (e.g., "tukey", "bonferroni").
+
+    Returns:
+        tuple:
+            - intrxn_emmeans_df (pd.DataFrame): A pandas DataFrame containing the EMMs with categorical labels restored.
+              Columns typically include the factors specified in the formula, the estimated means (`emmean`), 
+              and standard errors (`SE`).
+            - contrasts_df (pd.DataFrame): A pandas DataFrame containing the pairwise contrasts for the EMMs, 
+              including the contrast estimates, confidence intervals, and adjusted p-values.
+
+    Workflow:
+        1. The function uses the `emmeans` R package to calculate EMMs and pairwise contrasts for the given model.
+        2. The EMMs are extracted and converted from an R dataframe to a pandas DataFrame.
+        3. Categorical columns in the EMMs are identified, and their numeric levels are mapped back to their original labels.
+            Note: This is done using the `get_categorical_columns_and_levels` and `map_numeric_levels_to_labels` functions.
+            Note: This is not ideal, but necessary due to differences between R and Python interoperability.
+        4. Pairwise contrasts are extracted and converted to a pandas DataFrame.
+
+    Raises:
+        ValueError: If the `emmeans` function returns NULL for the EMMs, indicating an issue with the model or formula.
     """
-    # Set emm_options to disable sorting
-    r('emmeans::emm_options(sort = FALSE)')
-    
     emm_formula = Formula(formula)
     emmeans_results = emmeans.emmeans(lmer_model, specs=emm_formula, adjust=adjust_method)
+
+    # Extract the EMMs
     intrxn_emmeans_r = emmeans_results.rx2('emmeans')
-    print(intrxn_emmeans_r)
+
+    # Check if intrxn_emmeans_r is NULL
+    if intrxn_emmeans_r is None:
+        print("Error: 'emmeans' returned NULL.")
+        return None, None
+
+    # Convert the EMMs to a DataFrame
     intrxn_emmeans_r_df = r['as.data.frame'](intrxn_emmeans_r)
-    
-    print(intrxn_emmeans_r_df)
+
+    # Get categorical columns and their levels
+    categorical_columns, column_levels = get_categorical_columns_and_levels(intrxn_emmeans_r_df)
+
+    # Convert the R dataframe to a pandas DataFrame
     intrxn_emmeans_df = pandas2ri.rpy2py(intrxn_emmeans_r_df)
-    print(intrxn_emmeans_df)
-    intrxn_emmeans_df.to_csv("./output/emms_test_output.csv")
+
+    # Map numeric levels back to original labels for all categorical columns
+    intrxn_emmeans_df = map_numeric_levels_to_labels(intrxn_emmeans_df, categorical_columns, column_levels)
+
+    # Calculate pairwise contrasts and convert to pandas DataFrame
     contrasts_r = emmeans_results.rx2('contrasts')
     contrasts_df = pandas2ri.rpy2py(r['as.data.frame'](contrasts_r))
+    
     return intrxn_emmeans_df, contrasts_df
 
 
@@ -314,13 +445,55 @@ def plot_results(df, output_file, title):
     plt.savefig(output_file)
     plt.show()
 
-def process_anova_and_plot(df, anova_contrast_config):
+
+def analyze_and_plot(df, anova_contrast_config):
     """
-    Process multiple ANOVA and contrast sections, calculate contrasts, and plot results based on the configuration.
+    Perform ANOVA, calculate EMMS, and generate plots based on the provided configuration.
+
+    This function processes section(s) in config file. For each section, 
+    it fits a linear mixed-effects model, performs ANOVA, calculates Estimated Marginal Means (EMMs) 
+    and pairwise contrasts, and generates time-series plots with error bars. The results are saved to 
+    CSV files and plots are exported as PDFs.
 
     Args:
-        df (pd.DataFrame): The input DataFrame.
-        anova_contrast_config (dict): The configuration dictionary containing multiple sections for ANOVA and contrasts.
+        df (pd.DataFrame): The input DataFrame containing the data to analyze.
+        anova_contrast_config (dict): A dictionary containing configuration for multiple sections. 
+            Each section specifies:
+                - "lmer_formula" (str): The formula for fitting the linear mixed-effects model.
+                - "emm_formula" (str): The formula for calculating EMMs.
+                - "adjust_method" (str): The method for p-value adjustment in pairwise contrasts 
+                  (e.g., "tukey", "bonferroni").
+                - "time_variable" (str): The column representing the time variable (e.g., 'one_hour').
+                - "group_variable" (str): The column representing the grouping variable (e.g., 'Genotype').
+                - "output_file" (str): The file path to save ANOVA and contrast results as a CSV.
+                - "plot_output_file" (str): The file path to save the generated plot as a PDF.
+                - "plot_title" (str): The title for the generated plot.
+
+    Workflow:
+        1. Iterate over each section in the configuration.
+        2. Fit a linear mixed-effects model using the specified formula.
+        3. Perform ANOVA on the fitted model and save the results.
+        4. Calculate EMMs and pairwise contrasts
+        5. Sort the EMMs DataFrame and generate a numeric 'zt' column for time-series plotting.
+        6. Save the ANOVA and contrast results to a CSV file.
+        7. Generate and save a time-series plot with error bars.
+
+    Outputs:
+        - CSV files containing ANOVA results and pairwise contrasts for each section.
+        - PDF files containing time-series plots for each section.
+
+    Raises:
+        ValueError: If the generated 'zt' column length does not match the DataFrame length.
+
+    Notes:
+        - This function relies on several helper functions, including:
+            - `fit_lmer_model`: Fits the linear mixed-effects model.
+            - `calculate_anova`: Performs ANOVA on the fitted model.
+            - `calculate_emmeans`: Calculates EMMs and pairwise contrasts.
+            - `sort_and_generate_zt_column`: Sorts the DataFrame and generates the 'zt' column.
+            - `write_results_to_csv`: Saves results to a CSV file.
+            - `plot_results`: Generates and saves the time-series plot.
+        - The 'zt' column is essential for aligning time intervals on the x-axis in time-series plots.
     """
     # Iterate over each section in the anova_contrast configuration
     for section_name, config in anova_contrast_config.items():
@@ -329,8 +502,8 @@ def process_anova_and_plot(df, anova_contrast_config):
         # Fit the model
         lmer_model = fit_lmer_model(df, config["lmer_formula"])
 
-        # Perform ANOVA
-        anova_df = perform_anova(lmer_model)
+        # Calculate ANOVA
+        anova_df = calculate_anova(lmer_model)
 
         # Calculate EMMs and contrasts
         intrxn_emmeans_df, contrasts_df = calculate_emmeans(
@@ -339,15 +512,6 @@ def process_anova_and_plot(df, anova_contrast_config):
             adjust_method=config["adjust_method"]
         )
 
-        # Map numeric levels back to original labels
-        intrxn_emmeans_df = map_numeric_to_original_labels(
-            df=intrxn_emmeans_df,
-            mapping_df=df,
-            columns=config["columns_to_map"]
-        )
-
-        intrxn_emmeans_df.to_csv("./output/emms_test_post_map.csv")
-
         # Sort and generate 'zt' column
         intrxn_emmeans_df = sort_and_generate_zt_column(
             df=intrxn_emmeans_df,
@@ -355,9 +519,7 @@ def process_anova_and_plot(df, anova_contrast_config):
             group_variable=config["group_variable"]
         )
 
-        intrxn_emmeans_df.to_csv("./output/emms_test_post_sort.csv")
-
-        # Write results to CSV
+        # Write ANOVA and contrast results to CSV
         write_results_to_csv(anova_df, contrasts_df, config["output_file"])
 
         # Plot results with the specified title
