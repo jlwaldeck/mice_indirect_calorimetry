@@ -565,7 +565,8 @@ def plot_column_plot(intrxn_emmeans_df, predicted_values_df, output_file, title)
         size=5,
         marker="o",
         linewidth=0.5,
-        edgecolor="black"
+        edgecolor="black",
+        legend=False  # Suppress legend for the jitter plot
     )
 
     # Customize the plot
