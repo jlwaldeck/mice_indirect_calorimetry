@@ -455,7 +455,7 @@ def write_results_to_csv(anova_df, contrasts_df, output_file):
         f.write("\nPairwise Contrasts\n")
         contrasts_df.to_csv(f, index=False)
 
-def plot_results(df, output_file, title):
+def plot_lineplot(df, output_file, title):
     """
     Plot the results using seaborn and matplotlib.
 
@@ -571,13 +571,14 @@ def analyze_and_plot(df, anova_contrast_config):
                 time_variable=config["time_variable"],
                 group_variable=config["group_variable"]
             )
+
+            # Write ANOVA and contrast results to CSV
+            write_results_to_csv(anova_df, contrasts_df, config["contrasts_output_file"])
+
+            # Plot results with the specified title
+            plot_lineplot(intrxn_emmeans_df, config["plot_output_file"], config["plot_title"])
             
         elif config["plot_type"] == "column":
             # Process grouped data to calculate predicted values
             predicted_values_df = process_grouped_data(df, lmer_model)
 
-        # Write ANOVA and contrast results to CSV
-        write_results_to_csv(anova_df, contrasts_df, config["output_file"])
-
-        # Plot results with the specified title
-        plot_results(intrxn_emmeans_df, config["plot_output_file"], config["plot_title"])
