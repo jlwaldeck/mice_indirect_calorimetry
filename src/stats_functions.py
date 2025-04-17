@@ -503,6 +503,7 @@ def analyze_and_plot(df, anova_contrast_config):
 
         # Fit the model
         lmer_model = fit_lmer_model(df, config["lmer_formula"])
+        r.assign("lmer_model", lmer_model)
 
         # Calculate ANOVA
         anova_df = calculate_anova(lmer_model)
@@ -514,7 +515,7 @@ def analyze_and_plot(df, anova_contrast_config):
             adjust_method=config["adjust_method"]
         )
 
-        # Determin plot type
+        # Determine plot type and proceed accordingly
         if config["plot_type"] == "line":
             # Sort and generate 'zt' column
             intrxn_emmeans_df = sort_and_generate_zt_column(
@@ -526,11 +527,16 @@ def analyze_and_plot(df, anova_contrast_config):
             # Create empty list for predicted values
             predicted_values = []
 
+            # Loop through groups in the DataFrame
             for (animal, genotype, day_night), group_data in df.groupby(['Animal', 'Genotype', 'day_night']):
+                
                 print(f"Processing group: Animal={animal}, Genotype={genotype}, Day/Night={day_night}")
+                
+                # Convert the group data to an R dataframe and assing it to R
                 r_df = pandas2ri.py2rpy(group_data)
                 r.assign("group_data_r", r_df)
-                r.assign("lmer_model", lmer_model)
+                
+                # Determine predicted values using the lmer model and group data
                 r("group_data_r$Predicted_Value = mean(predict(lmer_model, newdata = group_data_r, re.form = ~(1 | Animal)))")
                 
                 # Convert the modified R df back to a pandas df
