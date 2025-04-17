@@ -425,7 +425,7 @@ def plot_results(df, output_file, title):
         style="Genotype",
         markers=True,
         dashes=True,
-        ci=None
+        errorbar=None
     )
     for var in df["Genotype"].unique():
         subset = df[df["Genotype"] == var]
