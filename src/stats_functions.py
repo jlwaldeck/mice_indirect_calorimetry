@@ -498,6 +498,8 @@ def analyze_and_plot(df, anova_contrast_config):
     # Iterate over each section in the anova_contrast configuration
     for section_name, config in anova_contrast_config.items():
         print(f"Processing section: {section_name}")
+        if section_name != "Activity_LD":
+            continue
 
         # Fit the model
         lmer_model = fit_lmer_model(df, config["lmer_formula"])
@@ -521,9 +523,23 @@ def analyze_and_plot(df, anova_contrast_config):
                 group_variable=config["group_variable"]
         )
         else:
-            print("plot_type = " + config["plot_type"] + " not supported. Skipping plot generation.")
-            continue
-        
+
+            for (animal, genotype, day_night), group in df.groupby(['Animal', 'Genotype', 'day_night']):
+                print(f"Processing group: Animal={animal}, Genotype={genotype}, Day/Night={day_night}")
+                r_df = pandas2ri.py2rpy(group)
+                r.assign("data2", r_df)
+                r('library(dplyr)')
+                r.assign("lmer_model", lmer_model)
+                r("data2$Predicted_Value = mean(predict(lmer_model, newdata = data2, re.form = ~(1 | Animal)))")
+                
+                # Convert the modified R DataFrame back to a pandas DataFrame
+                data2_modified = r('data2')  # Retrieve the modified R DataFrame
+                data2_modified_df = pandas2ri.rpy2py(data2_modified)  # Convert to pandas DataFrame
+
+                # Print or use the pandas DataFrame
+                print(data2_modified_df.shape)
+                print(data2_modified_df.columns)
+
         # Write ANOVA and contrast results to CSV
         write_results_to_csv(anova_df, contrasts_df, config["output_file"])
 
