@@ -523,22 +523,34 @@ def analyze_and_plot(df, anova_contrast_config):
                 group_variable=config["group_variable"]
         )
         else:
+            # Create empty list for predicted values
+            predicted_values = []
 
-            for (animal, genotype, day_night), group in df.groupby(['Animal', 'Genotype', 'day_night']):
+            for (animal, genotype, day_night), group_data in df.groupby(['Animal', 'Genotype', 'day_night']):
                 print(f"Processing group: Animal={animal}, Genotype={genotype}, Day/Night={day_night}")
-                r_df = pandas2ri.py2rpy(group)
-                r.assign("data2", r_df)
-                r('library(dplyr)')
+                r_df = pandas2ri.py2rpy(group_data)
+                r.assign("group_data_r", r_df)
                 r.assign("lmer_model", lmer_model)
-                r("data2$Predicted_Value = mean(predict(lmer_model, newdata = data2, re.form = ~(1 | Animal)))")
+                r("group_data_r$Predicted_Value = mean(predict(lmer_model, newdata = group_data_r, re.form = ~(1 | Animal)))")
                 
-                # Convert the modified R DataFrame back to a pandas DataFrame
-                data2_modified = r('data2')  # Retrieve the modified R DataFrame
-                data2_modified_df = pandas2ri.rpy2py(data2_modified)  # Convert to pandas DataFrame
+                # Convert the modified R df back to a pandas df
+                group_data_r = r('group_data_r')  # Retrieve the modified R df
+                group_data = pandas2ri.rpy2py(group_data_r)
 
-                # Print or use the pandas DataFrame
-                print(data2_modified_df.shape)
-                print(data2_modified_df.columns)
+                # Calculate the mean of the predicted values
+                predicted_value_mean = group_data["Predicted_Value"].mean()
+
+                # Create a dictionary to store the results and append to the list
+                prediction = {
+                    "Animal": animal,
+                    "Genotype": genotype,
+                    "day_night": day_night,
+                    "Predicted_value": predicted_value_mean
+                }
+                predicted_values.append(prediction)
+
+            # After processing each group, convert the list of dicts to pandas df
+            predicted_values_df = pd.DataFrame(predicted_values)
 
         # Write ANOVA and contrast results to CSV
         write_results_to_csv(anova_df, contrasts_df, config["output_file"])
