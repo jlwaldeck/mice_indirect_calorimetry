@@ -491,7 +491,7 @@ def plot_lineplot(df, output_file, title):
     plt.legend(title="Genotype")
     plt.tight_layout()
     plt.savefig(output_file)
-    plt.show()
+    # plt.show()
 
 
 def analyze_and_plot(df, anova_contrast_config):
@@ -545,7 +545,7 @@ def analyze_and_plot(df, anova_contrast_config):
     """
     # Iterate over each section in the anova_contrast configuration
     for section_name, config in anova_contrast_config.items():
-        print(f"Processing section: {section_name}")
+        # print(f"Processing section: {section_name}")
         # if section_name != "Activity_LD":
         #     continue
 
@@ -572,13 +572,13 @@ def analyze_and_plot(df, anova_contrast_config):
                 group_variable=config["group_variable"]
             )
 
-            # Write ANOVA and contrast results to CSV
-            write_results_to_csv(anova_df, contrasts_df, config["contrasts_output_file"])
-
             # Plot results with the specified title
             plot_lineplot(intrxn_emmeans_df, config["plot_output_file"], config["plot_title"])
             
         elif config["plot_type"] == "column":
             # Process grouped data to calculate predicted values
             predicted_values_df = process_grouped_data(df, lmer_model)
+
+        # Write ANOVA and contrast results to CSV
+        write_results_to_csv(anova_df, contrasts_df, config["contrasts_output_file"])
 
