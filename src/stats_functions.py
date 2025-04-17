@@ -512,13 +512,18 @@ def analyze_and_plot(df, anova_contrast_config):
             adjust_method=config["adjust_method"]
         )
 
-        # Sort and generate 'zt' column
-        intrxn_emmeans_df = sort_and_generate_zt_column(
-            df=intrxn_emmeans_df,
-            time_variable=config["time_variable"],
-            group_variable=config["group_variable"]
+        # Determin plot type
+        if config["plot_type"] == "line":
+            # Sort and generate 'zt' column
+            intrxn_emmeans_df = sort_and_generate_zt_column(
+                df=intrxn_emmeans_df,
+                time_variable=config["time_variable"],
+                group_variable=config["group_variable"]
         )
-
+        else:
+            print("plot_type = " + config["plot_type"] + " not supported. Skipping plot generation.")
+            continue
+        
         # Write ANOVA and contrast results to CSV
         write_results_to_csv(anova_df, contrasts_df, config["output_file"])
 

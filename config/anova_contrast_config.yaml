@@ -8,6 +8,7 @@ anova_contrast:
     output_file: "./output/202305_DATBFX_Females_Sable_RC_AL_LD_Food_Intake_contrasts_1hr.csv"
     plot_output_file: "./output/202305_DATBFX_Females_Sable_RC_AL_FoodIntake_1hr_Line_Plot.pdf"
     plot_title: "Food Intake (1hr)"
+    plot_type: "line"
 
   FoodIntake_2hr:
     lmer_formula: "UptakeASum_2hrs ~ Genotype * two_hours + (1|Animal) + (1|StartDate)"
@@ -18,6 +19,7 @@ anova_contrast:
     output_file: "./output/202305_DATBFX_Females_Sable_RC_AL_LD_Food_Intake_contrasts_2hr.csv"
     plot_output_file: "./output/202305_DATBFX_Females_Sable_RC_AL_FoodIntake_2hr_Line_Plot.pdf"
     plot_title: "Food Intake (2hrs)"
+    plot_type: "line"
 
   FoodIntake_4hrs:
     lmer_formula: "UptakeASum_4hrs ~ Genotype * four_hours + (1|Animal) + (1|StartDate)"
@@ -28,6 +30,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Food_Intake_contrasts_4hrs.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_FoodIntake_4hrs_Line_Plot.pdf"
     plot_title: "Food Intake (4hrs)"
+    plot_type: "line"
 
   Activity_1hr:
     lmer_formula: "AllMeters_1hr ~ Genotype * one_hour + (1|Animal) + (1|StartDate)"
@@ -38,6 +41,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Activity_contrasts_1hr.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Activity_1hr_Line_Plot.pdf"
     plot_title: "Activity (1hr)"
+    plot_type: "line"
 
   Activity_2hrs:
     lmer_formula: "AllMeters_2hrs ~ Genotype * two_hours + (1|Animal) + (1|StartDate)"
@@ -48,6 +52,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Activity_contrasts_2hrs.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Activity_2hrs_Line_Plot.pdf"
     plot_title: "Activity (2hrs)"
+    plot_type: "line"
 
   Activity_4hrs:
     lmer_formula: "AllMeters_4hrs ~ Genotype * four_hours + (1|Animal) + (1|StartDate)"
@@ -58,6 +63,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Activity_contrasts_4hrs.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Activity_4hrs_Line_Plot.pdf"
     plot_title: "Activity (4hrs)"
+    plot_type: "line"
 
   Sleep_pct_1hr:
     lmer_formula: "Sleep_pct_1hr ~ Genotype * one_hour + (1|Animal) + (1|StartDate)"
@@ -68,6 +74,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Sleep_pct_contrasts_1hr.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Sleep_pct_1hr_Line_Plot.pdf"
     plot_title: "Sleep_pct (1hr)"
+    plot_type: "line"
 
   Sleep_pct_2hrs:
     lmer_formula: "Sleep_pct_2hrs ~ Genotype * two_hours + (1|Animal) + (1|StartDate)"
@@ -78,6 +85,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Sleep_pct_contrasts_2hrs.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Sleep_pct_2hrs_Line_Plot.pdf"
     plot_title: "Sleep_pct (2hrs)"
+    plot_type: "line"
 
   Sleep_pct_4hrs:
     lmer_formula: "Sleep_pct_4hrs ~ Genotype * four_hours + (1|Animal) + (1|StartDate)"
@@ -88,6 +96,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Sleep_pct_contrasts_4hrs.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Sleep_pct_4hrs_Line_Plot.pdf"
     plot_title: "Sleep_pct (4hrs)"
+    plot_type: "line"
 
   Avg_VO2_1hr:
     lmer_formula: "Avg_VO2_1hr ~ Genotype * one_hour + BodyMass_g + (1|Animal) + (1|StartDate)"
@@ -98,6 +107,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Avg_VO2_contrasts_1hr.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Avg_VO2_1hr_Line_Plot.pdf"
     plot_title: "Avg_VO2 (1hr)"
+    plot_type: "line"
 
   Avg_VO2_2hrs:
     lmer_formula: "Avg_VO2_2hrs ~ Genotype * two_hours + BodyMass_g + (1|Animal) + (1|StartDate)"
@@ -108,6 +118,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Avg_VO2_contrasts_2hrs.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Avg_VO2_2hrs_Line_Plot.pdf"
     plot_title: "Avg_VO2 (2hrs)"
+    plot_type: "line"
 
   Avg_VO2_4hrs:
     lmer_formula: "Avg_VO2_4hrs ~ Genotype * four_hours + BodyMass_g + (1|Animal) + (1|StartDate)"
@@ -118,6 +129,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Avg_VO2_contrasts_4hrs.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Avg_VO2_4hrs_Line_Plot.pdf"
     plot_title: "Avg_VO2 (4hrs)"
+    plot_type: "line"
 
   Avg_RQ_1hr:
     lmer_formula: "Avg_RQ_1hr ~ Genotype * one_hour + (1|Animal) + (1|StartDate)"
@@ -128,6 +140,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Avg_RQ_contrasts_1hr.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Avg_RQ_1hr_Line_Plot.pdf"
     plot_title: "Avg_RQ (1hr)"
+    plot_type: "line"
 
   Avg_RQ_2hrs:
     lmer_formula: "Avg_RQ_2hrs ~ Genotype * two_hours + (1|Animal) + (1|StartDate)"
@@ -138,6 +151,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Avg_RQ_contrasts_2hrs.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Avg_RQ_2hrs_Line_Plot.pdf"
     plot_title: "Avg_RQ (2hrs)"
+    plot_type: "line"
 
   Avg_RQ_4hrs:
     lmer_formula: "Avg_RQ_4hrs ~ Genotype * four_hours + (1|Animal) + (1|StartDate)"
@@ -148,6 +162,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Avg_RQ_contrasts_4hrs.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Avg_RQ_4hrs_Line_Plot.pdf"
     plot_title: "Avg_RQ (4hrs)"
+    plot_type: "line"
   
   Avg_EE_1hr:
     lmer_formula: "Avg_EE_1hr ~ Genotype * one_hour + BodyMass_g + (1|Animal) + (1|StartDate)"
@@ -158,6 +173,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Avg_EE_contrasts_1hr.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Avg_EE_1hr_Line_Plot.pdf"
     plot_title: "Avg_EE (1hr)"
+    plot_type: "line"
 
   Avg_EE_2hrs:
     lmer_formula: "Avg_EE_2hrs ~ Genotype * two_hours + BodyMass_g + (1|Animal) + (1|StartDate)"
@@ -168,6 +184,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Avg_EE_contrasts_2hrs.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Avg_EE_2hrs_Line_Plot.pdf"
     plot_title: "Avg_EE (2hrs)"
+    plot_type: "line"
 
   Avg_EE_4hrs:
     lmer_formula: "Avg_EE_4hrs ~ Genotype * four_hours + BodyMass_g + (1|Animal) + (1|StartDate)"
@@ -178,6 +195,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Avg_EE_contrasts_4hrs.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Avg_EE_4hrs_Line_Plot.pdf"
     plot_title: "Avg_EE (4hrs)"
+    plot_type: "line"
 
   Tot_EE_1hr:
     lmer_formula: "Tot_EE_1hr ~ Genotype * one_hour + BodyMass_g + (1|Animal) + (1|StartDate)"
@@ -188,6 +206,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Tot_EE_contrasts_1hr.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Tot_EE_1hr_Line_Plot.pdf"
     plot_title: "Tot_EE (1hr)"
+    plot_type: "line"
 
   Tot_EE_2hrs:
     lmer_formula: "Tot_EE_2hrs ~ Genotype * two_hours + BodyMass_g + (1|Animal) + (1|StartDate)"
@@ -198,6 +217,7 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Tot_EE_contrasts_2hrs.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Tot_EE_2hrs_Line_Plot.pdf"
     plot_title: "Tot_EE (2hrs)"
+    plot_type: "line"
 
   Tot_EE_4hrs:
     lmer_formula: "Tot_EE_4hrs ~ Genotype * four_hours + BodyMass_g + (1|Animal) + (1|StartDate)"
@@ -208,3 +228,15 @@ anova_contrast:
     output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Tot_EE_contrasts_4hrs.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Tot_EE_4hrs_Line_Plot.pdf"
     plot_title: "Tot_EE (4hrs)"
+    plot_type: "line"
+
+  Activity_LD:
+    lmer_formula: "AllMeters_LD ~ Genotype * day_night + (1|Animal) + (1|StartDate)"
+    emm_formula: "pairwise ~ Genotype:day_night"
+    adjust_method: "fdr"
+    time_variable: "day_night"
+    group_variable: "Genotype"
+    output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Activity_contrasts_LD.csv"
+    plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Activity_Amount.pdf"
+    plot_title: "Light and Dark Activity)"
+    plot_type: "column"
