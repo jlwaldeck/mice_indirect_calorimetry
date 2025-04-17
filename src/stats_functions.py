@@ -396,6 +396,54 @@ def sort_and_generate_zt_column(df, time_variable, group_variable):
 
     return df
 
+
+def process_grouped_data(df, lmer_model):
+    """
+    Process grouped data to calculate predicted values for each group.
+
+    Args:
+        df (pd.DataFrame): The input DataFrame to process.
+        lmer_model: The fitted R lmer model.
+
+    Returns:
+        pd.DataFrame: A DataFrame with the grouping variables and the mean predicted values.
+    """
+    # Create an empty list for storing predicted values
+    predicted_values = []
+
+    # Loop through groups in the DataFrame
+    for (animal, genotype, day_night), group_data in df.groupby(['Animal', 'Genotype', 'day_night']):
+        print(f"Processing group: Animal={animal}, Genotype={genotype}, Day/Night={day_night}")
+
+        # Convert the group data to an R dataframe and assign it to R
+        r_df = pandas2ri.py2rpy(group_data)
+        r.assign("group_data_r", r_df)
+
+        # Determine predicted values using the lmer model and group data
+        r("group_data_r$Predicted_Value = mean(predict(lmer_model, newdata = group_data_r, re.form = ~(1 | Animal)))")
+
+        # Convert the modified R dataframe back to a pandas dataframe
+        group_data_r = r('group_data_r')  # Retrieve the modified R dataframe
+        group_data = pandas2ri.rpy2py(group_data_r)
+
+        # Calculate the mean of the predicted values
+        predicted_value_mean = group_data["Predicted_Value"].mean()
+
+        # Create a dictionary to store the results and append to the list
+        prediction = {
+            "Animal": animal,
+            "Genotype": genotype,
+            "day_night": day_night,
+            "Predicted_value": predicted_value_mean
+        }
+        predicted_values.append(prediction)
+
+    # Convert the list of dictionaries to a pandas DataFrame
+    predicted_values_df = pd.DataFrame(predicted_values)
+
+    return predicted_values_df
+
+
 def write_results_to_csv(anova_df, contrasts_df, output_file):
     """
     Write ANOVA results and contrasts to a CSV file.
@@ -498,8 +546,8 @@ def analyze_and_plot(df, anova_contrast_config):
     # Iterate over each section in the anova_contrast configuration
     for section_name, config in anova_contrast_config.items():
         print(f"Processing section: {section_name}")
-        if section_name != "Activity_LD":
-            continue
+        # if section_name != "Activity_LD":
+        #     continue
 
         # Fit the model
         lmer_model = fit_lmer_model(df, config["lmer_formula"])
@@ -522,41 +570,11 @@ def analyze_and_plot(df, anova_contrast_config):
                 df=intrxn_emmeans_df,
                 time_variable=config["time_variable"],
                 group_variable=config["group_variable"]
-        )
-        else:
-            # Create empty list for predicted values
-            predicted_values = []
-
-            # Loop through groups in the DataFrame
-            for (animal, genotype, day_night), group_data in df.groupby(['Animal', 'Genotype', 'day_night']):
-                
-                print(f"Processing group: Animal={animal}, Genotype={genotype}, Day/Night={day_night}")
-                
-                # Convert the group data to an R dataframe and assing it to R
-                r_df = pandas2ri.py2rpy(group_data)
-                r.assign("group_data_r", r_df)
-                
-                # Determine predicted values using the lmer model and group data
-                r("group_data_r$Predicted_Value = mean(predict(lmer_model, newdata = group_data_r, re.form = ~(1 | Animal)))")
-                
-                # Convert the modified R df back to a pandas df
-                group_data_r = r('group_data_r')  # Retrieve the modified R df
-                group_data = pandas2ri.rpy2py(group_data_r)
-
-                # Calculate the mean of the predicted values
-                predicted_value_mean = group_data["Predicted_Value"].mean()
-
-                # Create a dictionary to store the results and append to the list
-                prediction = {
-                    "Animal": animal,
-                    "Genotype": genotype,
-                    "day_night": day_night,
-                    "Predicted_value": predicted_value_mean
-                }
-                predicted_values.append(prediction)
-
-            # After processing each group, convert the list of dicts to pandas df
-            predicted_values_df = pd.DataFrame(predicted_values)
+            )
+            
+        elif config["plot_type"] == "column":
+            # Process grouped data to calculate predicted values
+            predicted_values_df = process_grouped_data(df, lmer_model)
 
         # Write ANOVA and contrast results to CSV
         write_results_to_csv(anova_df, contrasts_df, config["output_file"])
