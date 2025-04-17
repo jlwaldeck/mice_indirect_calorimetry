@@ -494,6 +494,75 @@ def plot_lineplot(df, output_file, title):
     # plt.show()
 
 
+def plot_column_plot(intrxn_emmeans_df, predicted_values_df, output_file, title):
+    """
+    Create a plot similar to the R ggplot for activity results.
+
+    Args:
+        intrxn_emmeans_df (pd.DataFrame): DataFrame containing the estimated marginal means (EMMs) and standard errors.
+        predicted_values_df (pd.DataFrame): DataFrame containing predicted values for each group.
+        output_file (str): Path to save the plot as a PDF.
+        title (str): Title of the plot.
+    """
+    # Set seaborn theme
+    sns.set_theme(style="whitegrid")
+
+    # Create a new column for interaction term (day_night:Genotype)
+    intrxn_emmeans_df["interaction"] = intrxn_emmeans_df["day_night"] + "." + intrxn_emmeans_df["Genotype"]
+    predicted_values_df["interaction"] = predicted_values_df["day_night"] + "." + predicted_values_df["Genotype"]
+
+    # Create the plot
+    plt.figure(figsize=(8, 6))
+
+    # Bar plot for EMMs
+    sns.barplot(
+        data=intrxn_emmeans_df,
+        x="interaction",
+        y="emmean",
+        hue="Genotype",
+        alpha=0.7,
+        dodge=False,
+        ci=None
+    )
+
+    # Add error bars for EMMs
+    for i, row in intrxn_emmeans_df.iterrows():
+        plt.errorbar(
+            x=row["interaction"],
+            y=row["emmean"],
+            yerr=row["SE"],
+            fmt="none",
+            capsize=3,
+            color="black"
+        )
+
+    # Jitter plot for predicted values
+    sns.stripplot(
+        data=predicted_values_df,
+        x="interaction",
+        y="Predicted_value",
+        hue="Genotype",
+        dodge=False,
+        alpha=0.7,
+        size=5,
+        marker="o",
+        linewidth=0.5,
+        edgecolor="black"
+    )
+
+    # Customize the plot
+    plt.title(title, fontsize=14)
+    plt.xlabel("day_night:Genotype", fontsize=12)
+    plt.ylabel("IR Beam Breaks", fontsize=12)
+    plt.legend(title="Genotype", fontsize=10, loc="upper right")
+    plt.xticks(rotation=45, ha="right")
+    plt.tight_layout()
+
+    # Save the plot to a PDF
+    plt.savefig(output_file)
+    plt.show()
+
+
 def analyze_and_plot(df, anova_contrast_config):
     """
     Perform ANOVA, calculate EMMS, and generate plots based on the provided configuration.
@@ -578,6 +647,14 @@ def analyze_and_plot(df, anova_contrast_config):
         elif config["plot_type"] == "column":
             # Process grouped data to calculate predicted values
             predicted_values_df = process_grouped_data(df, lmer_model)
+
+                    # Generate the plot
+            plot_column_plot(
+                intrxn_emmeans_df=intrxn_emmeans_df,
+                predicted_values_df=predicted_values_df,
+                output_file=config["plot_output_file"],
+                title=config["plot_title"]
+            )
 
         # Write ANOVA and contrast results to CSV
         write_results_to_csv(anova_df, contrasts_df, config["contrasts_output_file"])
