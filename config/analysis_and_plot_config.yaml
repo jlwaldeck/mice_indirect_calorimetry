@@ -290,7 +290,6 @@ analysis_and_plot:
     lmer_formula: "Tot_EE_LD ~ Genotype * day_night + BodyMass_g + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
-    time_variable: "day_night"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Tot_EE_contrasts_LD.csv"
@@ -302,7 +301,6 @@ analysis_and_plot:
     lmer_formula: "Avg_RQ_LD ~ Genotype * day_night + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
-    time_variable: "day_night"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_RER_contrasts_LD.csv"
