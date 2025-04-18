@@ -395,8 +395,8 @@ def process_grouped_data(df, lmer_model):
     predicted_values = []
 
     # Loop through groups in the DataFrame
-    for (animal, genotype, day_night), group_data in df.groupby(['Animal', 'Genotype', 'day_night']):
-        print(f"Processing group: Animal={animal}, Genotype={genotype}, Day/Night={day_night}")
+    for group_id, group_data in df.groupby(['Animal', 'Genotype']):
+        print(f"Processing group:" + str(group_id))
 
         # Convert the group data to an R dataframe and assign it to R
         r_df = pandas2ri.py2rpy(group_data)
@@ -414,9 +414,8 @@ def process_grouped_data(df, lmer_model):
 
         # Create a dictionary to store the results and append to the list
         prediction = {
-            "Animal": animal,
-            "Genotype": genotype,
-            "day_night": day_night,
+            "Animal": group_id[0],
+            "Genotype": group_id[1],
             "Predicted_value": predicted_value_mean
         }
         predicted_values.append(prediction)
