@@ -521,7 +521,8 @@ def plot_column_plot(
         hue=group_col,
         alpha=0.7,
         dodge=False,
-        ci=None
+        ci=None,
+        legend=True
     )
 
     # Add error bars for EMMs
