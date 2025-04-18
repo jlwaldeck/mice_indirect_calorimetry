@@ -494,22 +494,39 @@ def plot_lineplot(df, output_file, title):
     # plt.show()
 
 
-def plot_column_plot(intrxn_emmeans_df, predicted_values_df, output_file, title):
+def plot_column_plot(
+    intrxn_emmeans_df,
+    predicted_values_df,
+    output_file,
+    title,
+    interaction_columns,
+    y_emmean_col,
+    y_predicted_col,
+    group_col,
+    x_label,
+    y_label
+):
     """
-    Create a plot similar to the R ggplot for activity results.
+    Create a generic column plot for activity results based on configuration inputs.
 
     Args:
         intrxn_emmeans_df (pd.DataFrame): DataFrame containing the estimated marginal means (EMMs) and standard errors.
         predicted_values_df (pd.DataFrame): DataFrame containing predicted values for each group.
         output_file (str): Path to save the plot as a PDF.
         title (str): Title of the plot.
+        interaction_columns (list): List of column names to create the interaction term (e.g., ['day_night', 'Genotype']).
+        y_emmean_col (str): Column name for the EMMs (e.g., 'emmean').
+        y_predicted_col (str): Column name for the predicted values (e.g., 'Predicted_value').
+        group_col (str): Column name for the grouping variable (e.g., 'Genotype').
+        x_label (str): Label for the x-axis.
+        y_label (str): Label for the y-axis.
     """
     # Set seaborn theme
     sns.set_theme(style="whitegrid")
 
-    # Create a new column for interaction term (day_night:Genotype)
-    intrxn_emmeans_df["interaction"] = intrxn_emmeans_df["day_night"] + "." + intrxn_emmeans_df["Genotype"]
-    predicted_values_df["interaction"] = predicted_values_df["day_night"] + "." + predicted_values_df["Genotype"]
+    # Create a new column for the interaction term
+    intrxn_emmeans_df["interaction"] = intrxn_emmeans_df[interaction_columns].agg(".".join, axis=1)
+    predicted_values_df["interaction"] = predicted_values_df[interaction_columns].agg(".".join, axis=1)
 
     # Create the plot
     plt.figure(figsize=(8, 6))
@@ -518,8 +535,8 @@ def plot_column_plot(intrxn_emmeans_df, predicted_values_df, output_file, title)
     sns.barplot(
         data=intrxn_emmeans_df,
         x="interaction",
-        y="emmean",
-        hue="Genotype",
+        y=y_emmean_col,
+        hue=group_col,
         alpha=0.7,
         dodge=False,
         ci=None
@@ -529,7 +546,7 @@ def plot_column_plot(intrxn_emmeans_df, predicted_values_df, output_file, title)
     for i, row in intrxn_emmeans_df.iterrows():
         plt.errorbar(
             x=row["interaction"],
-            y=row["emmean"],
+            y=row[y_emmean_col],
             yerr=row["SE"],
             fmt="none",
             capsize=3,
@@ -540,8 +557,8 @@ def plot_column_plot(intrxn_emmeans_df, predicted_values_df, output_file, title)
     sns.stripplot(
         data=predicted_values_df,
         x="interaction",
-        y="Predicted_value",
-        hue="Genotype",
+        y=y_predicted_col,
+        hue=group_col,
         dodge=False,
         alpha=0.7,
         size=5,
@@ -553,9 +570,9 @@ def plot_column_plot(intrxn_emmeans_df, predicted_values_df, output_file, title)
 
     # Customize the plot
     plt.title(title, fontsize=14)
-    plt.xlabel("day_night:Genotype", fontsize=12)
-    plt.ylabel("IR Beam Breaks", fontsize=12)
-    plt.legend(title="Genotype", fontsize=10, loc="upper right")
+    plt.xlabel(x_label, fontsize=12)
+    plt.ylabel(y_label, fontsize=12)
+    plt.legend(title=group_col, fontsize=10, loc="upper right")
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
 
@@ -616,8 +633,8 @@ def analyze_and_plot(df, anova_contrast_config):
     # Iterate over each section in the anova_contrast configuration
     for section_name, config in anova_contrast_config.items():
         # print(f"Processing section: {section_name}")
-        # if section_name != "Activity_LD":
-        #     continue
+        if section_name != "Activity_LD":
+            continue
 
         # Fit the model
         lmer_model = fit_lmer_model(df, config["lmer_formula"])
@@ -654,7 +671,13 @@ def analyze_and_plot(df, anova_contrast_config):
                 intrxn_emmeans_df=intrxn_emmeans_df,
                 predicted_values_df=predicted_values_df,
                 output_file=config["plot_output_file"],
-                title=config["plot_title"]
+                title=config["plot_title"],
+                interaction_columns=["day_night", "Genotype"],
+                y_emmean_col="emmean",
+                y_predicted_col="Predicted_value",
+                group_col="Genotype",
+                x_label="day_night:Genotype",
+                y_label="IR Beam Breaks"
             )
 
         # Write ANOVA and contrast results to CSV
