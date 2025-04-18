@@ -235,7 +235,6 @@ analysis_and_plot:
     lmer_formula: "AllMeters_LD ~ Genotype * day_night + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
-    time_variable: "day_night"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Activity_contrasts_LD.csv"
@@ -247,7 +246,6 @@ analysis_and_plot:
     lmer_formula: "UptakeASum_LD ~ Genotype * day_night + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
-    time_variable: "day_night"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Food_Intake_contrasts_LD.csv"
@@ -259,7 +257,6 @@ analysis_and_plot:
     lmer_formula: "Sleep_pct_LD ~ Genotype * day_night + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
-    time_variable: "day_night"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Sleep_Percent_contrasts_LD.csv"
@@ -271,7 +268,6 @@ analysis_and_plot:
     lmer_formula: "Avg_VO2_LD ~ Genotype * day_night + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
-    time_variable: "day_night"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Avg_VO2_contrasts_LD.csv"
@@ -283,7 +279,6 @@ analysis_and_plot:
     lmer_formula: "Avg_EE_LD ~ Genotype * day_night + BodyMass_g + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
-    time_variable: "day_night"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Avg_EE_contrasts_LD.csv"
@@ -295,7 +290,6 @@ analysis_and_plot:
     lmer_formula: "Tot_EE_LD ~ Genotype * day_night + BodyMass_g + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
-    time_variable: "day_night"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Tot_EE_contrasts_LD.csv"
@@ -307,7 +301,6 @@ analysis_and_plot:
     lmer_formula: "Avg_RQ_LD ~ Genotype * day_night + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
-    time_variable: "day_night"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_RER_contrasts_LD.csv"
@@ -319,7 +312,6 @@ analysis_and_plot:
     lmer_formula: "UptakeASum_Daily ~ Genotype + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype"
     adjust_method: "fdr"
-    time_variable: "Genotype"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Food_Intake_contrasts_Daily.csv"
@@ -331,7 +323,6 @@ analysis_and_plot:
     lmer_formula: "AllMeters_Daily ~ Genotype + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype"
     adjust_method: "fdr"
-    time_variable: "Genotype"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Activity_contrasts_Daily.csv"
@@ -343,7 +334,6 @@ analysis_and_plot:
     lmer_formula: "Sleep_pct_Daily ~ Genotype + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype"
     adjust_method: "fdr"
-    time_variable: "Genotype"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Sleep_Percent_contrasts_Daily.csv"
@@ -355,7 +345,6 @@ analysis_and_plot:
     lmer_formula: "Avg_VO2_Daily ~ Genotype + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype"
     adjust_method: "fdr"
-    time_variable: "Genotype"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Avg_VO2_contrasts_Daily.csv"
@@ -367,7 +356,6 @@ analysis_and_plot:
     lmer_formula: "Avg_RQ_Daily ~ Genotype + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype"
     adjust_method: "fdr"
-    time_variable: "Genotype"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Avg_RQ_contrasts_Daily.csv"
@@ -379,7 +367,6 @@ analysis_and_plot:
     lmer_formula: "Avg_EE_Daily ~ Genotype + BodyMass_g + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype"
     adjust_method: "fdr"
-    time_variable: "Genotype"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Avg_EE_contrasts_Daily.csv"
@@ -391,7 +378,6 @@ analysis_and_plot:
     lmer_formula: "Tot_EE_Daily ~ Genotype + BodyMass_g + (1|Animal) + (1|StartDate)"
     emm_formula: "pairwise ~ Genotype"
     adjust_method: "fdr"
-    time_variable: "Genotype"
     group_variable: "Genotype"
     predicted_value_cols: ["Animal", "Genotype"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Tot_EE_contrasts_Daily.csv"
