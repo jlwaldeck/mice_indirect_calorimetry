@@ -654,11 +654,11 @@ def analyze_and_plot(df, anova_contrast_config):
                 predicted_values_df=predicted_values_df,
                 output_file=config["plot_output_file"],
                 title=config["plot_title"],
-                interaction_columns=["day_night", "Genotype"],
+                interaction_columns=["Genotype"],
                 y_emmean_col="emmean",
                 y_predicted_col="Predicted_value",
                 group_col="Genotype",
-                x_label="day_night:Genotype",
+                x_label="Genotype",
                 y_label="IR Beam Breaks"
             )
 
