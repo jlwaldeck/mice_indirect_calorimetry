@@ -11,7 +11,7 @@ gen_config_file_path = os.path.join(script_dir, '../config/general_config.yaml')
 col_value_map_file_path = os.path.join(script_dir, '../config/column_mapping.yaml')
 col_group_agg_file_path = os.path.join(script_dir, '../config/group_aggregation.yaml')
 data_summary_config_path = os.path.join(script_dir, '../config/data_summary.yaml')
-anova_contrast_config_path = os.path.join(script_dir, '../config/anova_contrast_config.yaml')
+analysis_and_plot_config_path = os.path.join(script_dir, '../config/analysis_and_plot_config.yaml')
 
 # Load the column mapping configuration from YAML
 with open(col_value_map_file_path, 'r') as file:
@@ -35,9 +35,9 @@ with open(data_summary_config_path, 'r') as file:
 data_summary_config = config.get('data_summaries', [])
 
 # Load the anova_contrast_config.yaml configuration
-with open(anova_contrast_config_path, "r") as file:
+with open(analysis_and_plot_config_path, "r") as file:
     config = yaml.safe_load(file)
-anova_contrast_config = config.get('anova_contrast', [])
+analysis_and_plot_config = config.get('analysis_and_plot', [])
 
 
 def main():
@@ -68,7 +68,7 @@ def main():
     process_data_summaries(df, data_summary_config)
 
     # Build lmer, calculate ANOVA, EMM and pairwise contrasts, plot results
-    analyze_and_plot(df, anova_contrast_config)
+    analyze_and_plot(df, analysis_and_plot_config)
 
 
 if __name__ == "__main__":
