@@ -511,24 +511,6 @@ def plot_column_plot(intrxn_emmeans_df, predicted_values_df, output_file, title)
     intrxn_emmeans_df["interaction"] = intrxn_emmeans_df["day_night"] + "." + intrxn_emmeans_df["Genotype"]
     predicted_values_df["interaction"] = predicted_values_df["day_night"] + "." + predicted_values_df["Genotype"]
 
-    # Dynamically determine the order of interactions
-    # Sort by `day_night` first, then by `Genotype`
-    interaction_order = (
-        intrxn_emmeans_df[["day_night", "Genotype"]]
-        .drop_duplicates()
-        .sort_values(by=["Genotype", "day_night"])
-        .assign(interaction=lambda df: df["day_night"] + "." + df["Genotype"])["interaction"]
-        .tolist()
-    )
-
-    # Convert the interaction column to a categorical type with the determined order
-    intrxn_emmeans_df["interaction"] = pd.Categorical(
-        intrxn_emmeans_df["interaction"], categories=interaction_order, ordered=True
-    )
-    predicted_values_df["interaction"] = pd.Categorical(
-        predicted_values_df["interaction"], categories=interaction_order, ordered=True
-    )
-
     # Create the plot
     plt.figure(figsize=(8, 6))
 
