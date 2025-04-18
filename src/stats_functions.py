@@ -261,6 +261,9 @@ def get_categorical_columns_and_levels(r_df):
     # Convert column names to native Python strings and remove duplicates
     categorical_columns = list(set([str(col) for col in categorical_columns]))
 
+    if 'emmean' in categorical_columns:
+        categorical_columns.remove('emmean')
+
     # Create a dictionary to store the levels for each categorical column
     column_levels = {col: list(r['levels'](r_df.rx2(col))) for col in categorical_columns}
 
