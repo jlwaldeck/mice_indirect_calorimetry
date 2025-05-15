@@ -616,7 +616,7 @@ def analyze_and_plot(df, anova_contrast_config):
     # Iterate over each section in the anova_contrast configuration
     for section_name, config in anova_contrast_config.items():
         # print(f"Processing section: {section_name}")
-        if section_name != "Activity_LD":
+        if section_name != "Activity_Daily":
             continue
 
         # Fit the model
