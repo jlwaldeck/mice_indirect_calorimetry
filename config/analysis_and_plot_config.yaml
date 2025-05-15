@@ -239,7 +239,7 @@ analysis_and_plot:
     predicted_value_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Activity_contrasts_LD.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Activity_Amount.pdf"
-    plot_title: "Light and Dark Activity)"
+    plot_title: "Light and Dark Activity"
     plot_type: "column"
 
   FoodIntake_LD:
