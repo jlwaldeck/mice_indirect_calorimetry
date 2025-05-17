@@ -129,6 +129,7 @@ def process_data_summaries(df, data_summay_config):
         data_summay_config (list): List of summary tasks from the configuration.
     """
     # Iterate over the tasks specified in user config
+    print(f"length of df: {len(df)}")
     for summary in data_summay_config:
         # Extract task parameters
         varname = summary['varname']
@@ -649,7 +650,7 @@ def analyze_and_plot(df, anova_contrast_config):
             # Process grouped data to calculate predicted values
             predicted_values_df = process_grouped_data(df, lmer_model)
 
-                    # Generate the plot
+            # Generate the plot
             plot_column_plot(
                 intrxn_emmeans_df=intrxn_emmeans_df,
                 predicted_values_df=predicted_values_df,
