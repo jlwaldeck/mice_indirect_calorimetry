@@ -940,7 +940,7 @@ ggplot() +
 
   geom_errorbar(data = Activity_lsmeans_Daily, aes(x = Genotype, y = emmean, ymin = emmean - SE, ymax = emmean + SE, group = Genotype), width = 0.2, position = position_dodge(.9)) + 
 
-  geom_jitter(data = predicted_values_Activity_LD, aes(x = Genotype, y = Predicted_value, color = Genotype), width = 0.2, size = 2, alpha = 0.7) + 
+  geom_jitter(data = predicted_values_Activity_Daily, aes(x = Genotype, y = Predicted_value, color = Genotype), width = 0.2, size = 2, alpha = 0.7) + 
 
   theme_minimal() + 
 
