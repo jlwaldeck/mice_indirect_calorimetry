@@ -381,23 +381,22 @@ def sort_and_generate_zt_column(df, time_variable, group_variable):
     return df
 
 
-def process_grouped_data(df, lmer_model):
+def process_grouped_data(df, lmer_model, grouping_cols):
     """
     Process grouped data to calculate predicted values for each group.
 
     Args:
         df (pd.DataFrame): The input DataFrame to process.
         lmer_model: The fitted R lmer model.
+        grouping_cols (list): List of columns to group by when calculating predicted values.
 
     Returns:
         pd.DataFrame: A DataFrame with the grouping variables and the mean predicted values.
     """
-    # Create an empty list for storing predicted values
     predicted_values = []
 
-    # Loop through groups in the DataFrame
-    for group_id, group_data in df.groupby(['Animal', 'Genotype']):
-        print(f"Processing group:" + str(group_id))
+    for group_id, group_data in df.groupby(grouping_cols):
+        print(f"Processing group: {group_id}")
 
         # Convert the group data to an R dataframe and assign it to R
         r_df = pandas2ri.py2rpy(group_data)
@@ -407,23 +406,18 @@ def process_grouped_data(df, lmer_model):
         r("group_data_r$Predicted_Value = mean(predict(lmer_model, newdata = group_data_r, re.form = ~(1 | Animal)))")
 
         # Convert the modified R dataframe back to a pandas dataframe
-        group_data_r = r('group_data_r')  # Retrieve the modified R dataframe
+        group_data_r = r('group_data_r')
         group_data = pandas2ri.rpy2py(group_data_r)
 
         # Calculate the mean of the predicted values
         predicted_value_mean = group_data["Predicted_Value"].mean()
 
-        # Create a dictionary to store the results and append to the list
-        prediction = {
-            "Animal": group_id[0],
-            "Genotype": group_id[1],
-            "Predicted_value": predicted_value_mean
-        }
+        # Build the prediction dictionary dynamically
+        prediction = {col: val for col, val in zip(grouping_cols, group_id)}
+        prediction["Predicted_value"] = predicted_value_mean
         predicted_values.append(prediction)
 
-    # Convert the list of dictionaries to a pandas DataFrame
     predicted_values_df = pd.DataFrame(predicted_values)
-
     return predicted_values_df
 
 
@@ -562,7 +556,7 @@ def plot_column_plot(
 
     # Save the plot to a PDF
     plt.savefig(output_file)
-    plt.show()
+    #plt.show()
 
 
 def analyze_and_plot(df, anova_contrast_config):
@@ -617,8 +611,8 @@ def analyze_and_plot(df, anova_contrast_config):
     # Iterate over each section in the anova_contrast configuration
     for section_name, config in anova_contrast_config.items():
         # print(f"Processing section: {section_name}")
-        if section_name != "Activity_Daily":
-            continue
+        # if section_name != "RER_Daily":
+        #     continue
 
         # Fit the model
         lmer_model = fit_lmer_model(df, config["lmer_formula"])
@@ -647,21 +641,22 @@ def analyze_and_plot(df, anova_contrast_config):
             plot_lineplot(intrxn_emmeans_df, config["plot_output_file"], config["plot_title"])
             
         elif config["plot_type"] == "column":
-            # Process grouped data to calculate predicted values
-            predicted_values_df = process_grouped_data(df, lmer_model)
+            # Use interaction_cols from config for grouping
+            interaction_cols = config.get("interaction_cols")
+            grouping_cols = config.get("predicted_value_group_cols")
+            predicted_values_df = process_grouped_data(df, lmer_model, grouping_cols)
 
-            # Generate the plot
             plot_column_plot(
                 intrxn_emmeans_df=intrxn_emmeans_df,
                 predicted_values_df=predicted_values_df,
                 output_file=config["plot_output_file"],
                 title=config["plot_title"],
-                interaction_columns=["Genotype"],
+                interaction_columns=interaction_cols,
                 y_emmean_col="emmean",
                 y_predicted_col="Predicted_value",
-                group_col="Genotype",
-                x_label="Genotype",
-                y_label="IR Beam Breaks"
+                group_col=config["group_variable"],
+                x_label=".".join(interaction_cols),
+                y_label=config["y_label"]
             )
 
         # Write ANOVA and contrast results to CSV

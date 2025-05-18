@@ -236,10 +236,12 @@ analysis_and_plot:
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
     group_variable: "Genotype"
-    predicted_value_cols: ["Animal", "Genotype", "day_night"]
+    interaction_cols: ["day_night", "Genotype"]
+    predicted_value_group_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Activity_contrasts_LD.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Activity_Amount.pdf"
     plot_title: "Light and Dark Activity"
+    y_label: "IR Beam Breaks"
     plot_type: "column"
 
   FoodIntake_LD:
@@ -247,10 +249,12 @@ analysis_and_plot:
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
     group_variable: "Genotype"
-    predicted_value_cols: ["Animal", "Genotype", "day_night"]
+    interaction_cols: ["day_night", "Genotype"]
+    predicted_value_group_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Food_Intake_contrasts_LD.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Feeding_Amount.pdf"
     plot_title: "Light and Dark Food Intake"
+    y_label: "Food Consumed (g)"
     plot_type: "column"
 
   Sleep_Percent_LD:
@@ -258,10 +262,12 @@ analysis_and_plot:
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
     group_variable: "Genotype"
-    predicted_value_cols: ["Animal", "Genotype", "day_night"]
+    interaction_cols: ["day_night", "Genotype"]
+    predicted_value_group_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Sleep_Percent_contrasts_LD.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Sleep_Percent_LD.pdf"
     plot_title: "Sleep Percentage (Light and Dark)"
+    y_label: "Sleep Percentage (%)"
     plot_type: "column"
 
   Avg_VO2_LD:
@@ -269,10 +275,12 @@ analysis_and_plot:
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
     group_variable: "Genotype"
-    predicted_value_cols: ["Animal", "Genotype", "day_night"]
+    interaction_cols: ["day_night", "Genotype"]
+    predicted_value_group_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Avg_VO2_contrasts_LD.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Avg_VO2_LD.pdf"
     plot_title: "Average VO2 Consumption (Light and Dark)"
+    y_label: "Oxygen Consumption (mL/min)"
     plot_type: "column"
 
   Avg_EE_LD:
@@ -280,10 +288,12 @@ analysis_and_plot:
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
     group_variable: "Genotype"
-    predicted_value_cols: ["Animal", "Genotype", "day_night"]
+    interaction_cols: ["day_night", "Genotype"]
+    predicted_value_group_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Avg_EE_contrasts_LD.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Average_Energy_Expenditure.pdf"
     plot_title: "Light and Dark Average Energy Expenditure"
+    y_label: "Energy Expenditure (kcal/hr)"
     plot_type: "column"
 
   Tot_EE_LD:
@@ -291,10 +301,12 @@ analysis_and_plot:
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
     group_variable: "Genotype"
-    predicted_value_cols: ["Animal", "Genotype", "day_night"]
+    interaction_cols: ["day_night", "Genotype"]
+    predicted_value_group_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Tot_EE_contrasts_LD.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_Total_Energy_Expenditure.pdf"
     plot_title: "Light and Dark Cumulative Energy Expenditure"
+    y_label: "Energy Expenditure (kcal/hr)"
     plot_type: "column"
 
   RER_LD:
@@ -302,10 +314,12 @@ analysis_and_plot:
     emm_formula: "pairwise ~ Genotype:day_night"
     adjust_method: "fdr"
     group_variable: "Genotype"
-    predicted_value_cols: ["Animal", "Genotype", "day_night"]
+    interaction_cols: ["day_night", "Genotype"]
+    predicted_value_group_cols: ["Animal", "Genotype", "day_night"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_LD_RER_contrasts_LD.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_RER_LD.pdf"
     plot_title: "Light and Dark Average RER"
+    y_label: "Average RER (VCO2/VO2)"
     plot_type: "column"
 
   FoodIntake_Daily:
@@ -313,10 +327,12 @@ analysis_and_plot:
     emm_formula: "pairwise ~ Genotype"
     adjust_method: "fdr"
     group_variable: "Genotype"
-    predicted_value_cols: ["Animal", "Genotype"]
+    interaction_cols: ["Genotype",]
+    predicted_value_group_cols: ["Animal", "Genotype"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Food_Intake_contrasts_Daily.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Feeding_Amount.pdf"
     plot_title: "Daily Food Intake"
+    y_label: "Food Consumed (g)"
     plot_type: "column"
 
   Activity_Daily:
@@ -324,10 +340,12 @@ analysis_and_plot:
     emm_formula: "pairwise ~ Genotype"
     adjust_method: "fdr"
     group_variable: "Genotype"
-    predicted_value_cols: ["Animal", "Genotype"]
+    interaction_cols: ["Genotype",]
+    predicted_value_group_cols: ["Animal", "Genotype"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Activity_contrasts_Daily.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Activity_Amount.pdf"
     plot_title: "Daily Activity"
+    y_label: "IR Beam Breaks"
     plot_type: "column"
 
   Sleep_Percent_Daily:
@@ -335,10 +353,12 @@ analysis_and_plot:
     emm_formula: "pairwise ~ Genotype"
     adjust_method: "fdr"
     group_variable: "Genotype"
-    predicted_value_cols: ["Animal", "Genotype"]
+    interaction_cols: ["Genotype",]
+    predicted_value_group_cols: ["Animal", "Genotype"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Sleep_Percent_contrasts_Daily.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Sleep_Percent.pdf"
     plot_title: "Daily Sleep Percentage"
+    y_label: "Sleep Percentage (%)"
     plot_type: "column"
 
   Avg_VO2_Daily:
@@ -346,10 +366,12 @@ analysis_and_plot:
     emm_formula: "pairwise ~ Genotype"
     adjust_method: "fdr"
     group_variable: "Genotype"
-    predicted_value_cols: ["Animal", "Genotype"]
+    interaction_cols: ["Genotype",]
+    predicted_value_group_cols: ["Animal", "Genotype"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Avg_VO2_contrasts_Daily.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Avg_VO2.pdf"
     plot_title: "Daily VO2 Consumption"
+    y_label: "Oxygen Consumption (mL/min)"
     plot_type: "column"
 
   RER_Daily:
@@ -357,10 +379,12 @@ analysis_and_plot:
     emm_formula: "pairwise ~ Genotype"
     adjust_method: "fdr"
     group_variable: "Genotype"
-    predicted_value_cols: ["Animal", "Genotype"]
+    interaction_cols: ["Genotype",]
+    predicted_value_group_cols: ["Animal", "Genotype"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Avg_RQ_contrasts_Daily.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Average_RER.pdf"
     plot_title: "Average Daily RER"
+    y_label: "RER (VCO2/VO2)"
     plot_type: "column"
 
   Avg_EE_Daily:
@@ -368,10 +392,12 @@ analysis_and_plot:
     emm_formula: "pairwise ~ Genotype"
     adjust_method: "fdr"
     group_variable: "Genotype"
-    predicted_value_cols: ["Animal", "Genotype"]
+    interaction_cols: ["Genotype",]
+    predicted_value_group_cols: ["Animal", "Genotype"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Avg_EE_contrasts_Daily.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Average_Energy_Expenditure.pdf"
     plot_title: "Daily Average Energy Expenditure"
+    y_label: "Energy Expenditure (kcal/hr)"
     plot_type: "column"
 
   Tot_EE_Daily:
@@ -379,8 +405,10 @@ analysis_and_plot:
     emm_formula: "pairwise ~ Genotype"
     adjust_method: "fdr"
     group_variable: "Genotype"
-    predicted_value_cols: ["Animal", "Genotype"]
+    interaction_cols: ["Genotype",]
+    predicted_value_group_cols: ["Animal", "Genotype"]
     contrasts_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Tot_EE_contrasts_Daily.csv"
     plot_output_file: "./output/202305_DBFX_Females_Sable_RC_AL_Daily_Total_Energy_Expenditure.pdf"
     plot_title: "Total Daily Energy Expenditure"
+    y_label: "Energy Expenditure (kcal)"
     plot_type: "column"
